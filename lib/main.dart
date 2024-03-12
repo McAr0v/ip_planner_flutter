@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:ip_planner_flutter/navigation/custom_navigation.dart';
 
-void main() {
+import 'design/app_colors.dart';
+
+void main() async{
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Посмотреть в движе - это слушатель изменений при входе выходе пользователя
+  /*runApp(
+    ChangeNotifierProvider(
+      create: (context) => AppState(),
+      child: MyApp(),
+    ),
+  );*/
+
   runApp(const MyApp());
 }
 
@@ -11,27 +25,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
+      //title: 'Flutter Demo',
+      /*theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      ),*/
+
+      home: const CustomNavContainer(),
+      routes: {
+        '/Profile': (context) => const CustomNavContainer(initialTabIndex: 3,),
+        '/orders': (context) => const CustomNavContainer(initialTabIndex: 0),
+        '/tasks': (context) => const CustomNavContainer(initialTabIndex: 1),
+        '/stat': (context) => const CustomNavContainer(initialTabIndex: 2),
+        //'/privacy_policy': (context) => const PrivacyPolicyPage(),
+        //'/reset_password_page': (context) => const ResetPasswordPage(),
+        //'/cities': (context) => const CitiesListScreen(),
+
+        // Другие маршруты вашего приложения
+      },
     );
   }
 }
@@ -84,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.title, style: const TextStyle(color: AppColors.brandColor),),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -107,6 +118,12 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             const Text(
               'You have pushed the button this many times:',
+              style: TextStyle(
+                fontFamily: 'sf_custom',
+                fontSize: 50.0,
+                fontWeight: FontWeight.normal,
+                height: 1
+              ),
             ),
             Text(
               '$_counter',
