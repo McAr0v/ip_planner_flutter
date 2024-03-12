@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "894560350962",
+    "project_id": "ipplanner-fdba7",
+    "storage_bucket": "ipplanner-fdba7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894560350962:android:c5a471b5f22244168b166b",
+        "android_client_info": {
+          "package_name": "com.example.ip_planner_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLOfhf_nfb8oaImj3ixS6vbwAi9Q-sK30"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

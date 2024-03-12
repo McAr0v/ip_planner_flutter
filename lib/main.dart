@@ -1,12 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ip_planner_flutter/design/dark_theme.dart';
 import 'package:ip_planner_flutter/navigation/custom_navigation.dart';
 
 import 'design/app_colors.dart';
+import 'firebase_options.dart';
 
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  if (auth.currentUser != null)
+  {
+    //await local_user.UserCustom.readUserDataAndWriteCurrentUser(auth.currentUser!.uid);
+  }
 
   // Посмотреть в движе - это слушатель изменений при входе выходе пользователя
   /*runApp(
