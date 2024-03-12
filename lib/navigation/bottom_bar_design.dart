@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BottomBarDesign extends StatelessWidget {
   final TabController tabController;
@@ -14,21 +15,22 @@ class BottomBarDesign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+
       currentIndex: tabController.index,
       onTap: onTabTapped,
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(FontAwesomeIcons.clipboardList),
           label: 'Сделки',
           backgroundColor: Colors.black,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(Icons.task),
           label: 'Задачи',
           backgroundColor: Colors.black,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(Icons.bar_chart),
           label: 'Статистика',
           backgroundColor: Colors.black,
         ),

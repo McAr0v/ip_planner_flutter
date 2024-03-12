@@ -7,13 +7,20 @@ class StatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return const Expanded(
-        child: Center(
-          child: Text(
-            'Страница статистики',
-            style: TextStyle(color: AppColors.brandColor),
+    return Container(
+      color: AppColors.black,
+      child: const Row(
+        children: [
+          Expanded(
+              child: Center(
+                child: Text(
+                  'Страница статистики',
+                  style: TextStyle(color: AppColors.yellowLight),
+                ),
+              )
           ),
-        )
+        ],
+      ),
     );
   }
 }

@@ -7,13 +7,20 @@ class TaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return const Expanded(
-        child: Center(
-          child: Text(
-            'Страница задач',
-            style: TextStyle(color: AppColors.brandColor),
+    return Container(
+      color: AppColors.black,
+      child: const Row(
+        children: [
+          Expanded(
+              child: Center(
+                child: Text(
+                  'Страница задач',
+                  style: TextStyle(color: AppColors.yellowLight),
+                ),
+              )
           ),
-        )
+        ],
+      ),
     );
   }
 }

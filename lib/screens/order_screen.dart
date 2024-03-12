@@ -7,13 +7,56 @@ class OrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return const Expanded(
-        child: Center(
-          child: Text(
-            'Страница заказов',
-            style: TextStyle(color: AppColors.brandColor),
+    return Container(
+      color: AppColors.black,
+      child: const Row(
+        children: [
+          Expanded(
+              child: Center(
+                child: Column(
+                  children: [
+                    Text(
+                      'Страница заказов',
+                      style: TextStyle(
+                          color: AppColors.yellowLight,
+                          fontFamily: 'sf_custom',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Страница заказов',
+                      style: TextStyle(
+                          color: AppColors.yellowLight,
+                          fontFamily: 'sf_custom',
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal),
+                    ),
+
+                    Text(
+                      'Страница заказов',
+                      style: TextStyle(
+                          color: AppColors.yellowLight,
+                          //fontFamily: 'sf_custom',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+
+                    Text(
+                      'Страница заказов',
+                      style: TextStyle(
+                          color: AppColors.yellowLight,
+                          //fontFamily: 'sf_custom',
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal),
+                    ),
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                ),
+              )
           ),
-        )
+        ],
+      ),
     );
   }
 }

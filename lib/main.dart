@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ip_planner_flutter/design/dark_theme.dart';
 import 'package:ip_planner_flutter/navigation/custom_navigation.dart';
 
 import 'design/app_colors.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
       ),*/
 
       home: const CustomNavContainer(),
+      theme: CustomTheme.darkTheme,
       routes: {
         '/Profile': (context) => const CustomNavContainer(initialTabIndex: 3,),
         '/orders': (context) => const CustomNavContainer(initialTabIndex: 0),
@@ -95,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title, style: const TextStyle(color: AppColors.brandColor),),
+        title: Text(widget.title, style: const TextStyle(color: AppColors.yellowLight),),
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
