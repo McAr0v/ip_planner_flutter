@@ -173,10 +173,6 @@ class FirstProfileInputScreenState extends State<FirstProfileInputScreen> {
                             uid: widget.uid,
                             email: widget.email,
                             name: name,
-                            lastname: lastName,
-                            phone: phone,
-                            gender: '',
-                            avatar: avatarUrl ?? defaultImage
                         );
 
                         String? result = await userInfo.publishToDb();

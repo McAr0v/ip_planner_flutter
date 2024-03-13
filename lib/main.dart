@@ -1,12 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:ip_planner_flutter/database/database_info_manager.dart';
 import 'package:ip_planner_flutter/design/dark_theme.dart';
 import 'package:ip_planner_flutter/navigation/custom_navigation.dart';
 import 'package:ip_planner_flutter/screens/confirm_email_screen.dart';
 import 'package:ip_planner_flutter/screens/login_screen.dart';
 import 'package:ip_planner_flutter/screens/privacy_screen.dart';
 import 'package:ip_planner_flutter/screens/registration_screen.dart';
+import 'package:ip_planner_flutter/user/user_custom.dart';
 import 'design/app_colors.dart';
 import 'firebase_options.dart';
 
@@ -22,8 +24,11 @@ void main() async{
 
   var currentUser = auth.currentUser;
 
-  if (currentUser != null)
+  if (currentUser != null && currentUser.emailVerified)
   {
+    await DbInfoManager.getInfoFromDbAndUpdate(currentUser.uid);
+    //UserCustom tempUser = UserCustom.empty(currentUser.uid, currentUser.email!);
+    //await tempUser.getEntityByIdFromDb(currentUser.uid);
     //await local_user.UserCustom.readUserDataAndWriteCurrentUser(auth.currentUser!.uid);
   }
 
@@ -75,9 +80,6 @@ class MyApp extends StatelessWidget {
         '/logIn': (context) => const LoginScreen(),
         '/privacy_policy': (context) => const PrivacyPolicyPage(),
         '/confirm_email': (context) => const ConfirmEmailScreen(),
-        //'/privacy_policy': (context) => const PrivacyPolicyPage(),
-        //'/reset_password_page': (context) => const ResetPasswordPage(),
-        //'/cities': (context) => const CitiesListScreen(),
 
         // Другие маршруты вашего приложения
       },

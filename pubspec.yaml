@@ -69,6 +69,10 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+  assets:
+    - assets/log_in_image.png
+    - assets/log_in_image_2.png
+
   fonts:
     - family: sf_custom
       fonts:

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ip_planner_flutter/navigation/bottom_bar_design.dart';
 import 'package:ip_planner_flutter/screens/login_screen.dart';
-import 'package:ip_planner_flutter/screens/order_screen.dart';
 import 'package:ip_planner_flutter/screens/profile_screen.dart';
 import 'package:ip_planner_flutter/screens/stat_screen.dart';
 import 'package:ip_planner_flutter/screens/task_screen.dart';

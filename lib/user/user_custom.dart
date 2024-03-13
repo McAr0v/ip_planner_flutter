@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:ip_planner_flutter/database/database_info_manager.dart';
 
 import '../database/mixin_database.dart';
 
@@ -7,10 +9,6 @@ class UserCustom {
   String uid;
   String email;
   String name;
-  String lastname;
-  String phone;
-  String gender;
-  String avatar;
 
   // Статическая переменная для хранения текущего пользователя
   static UserCustom? currentUser;
@@ -22,10 +20,6 @@ class UserCustom {
     required this.uid,
     required this.email,
     required this.name,
-    required this.lastname,
-    required this.phone,
-    required this.gender,
-    required this.avatar,
   });
 
   factory UserCustom.empty(String uid, String email) {
@@ -33,17 +27,13 @@ class UserCustom {
         uid: uid,
         email: email,
         name: '',
-        lastname: '',
-        phone: '',
-        gender: '',
-        avatar: 'https://firebasestorage.googleapis.com/v0/b/dvij-flutter.appspot.com/o/avatars%2Fdvij_unknow_user.jpg?alt=media&token=b63ea5ef-7bdf-49e9-a3ef-1d34d676b6a7',
     );
   }
 
   Future<String> publishToDb() async {
     String entityPath = '$uid/user_info';
 
-    Map<String, dynamic> data = generateEntityDataCode();
+    Map<String, dynamic> data = _generateEntityDataCode();
 
     String entityPublishResult = await MixinDatabase.publishToDB(entityPath, data);
 
@@ -51,16 +41,12 @@ class UserCustom {
 
   }
 
-  Map<String, dynamic> generateEntityDataCode() {
+  Map<String, dynamic> _generateEntityDataCode() {
 
     return <String, dynamic> {
-      'id': uid,
+      'uid': uid,
       'name': name,
-      'lastname': lastname,
-      'phone': phone,
       'email': email,
-      'gender': gender,
-      'avatar': avatar,
     };
   }
 
@@ -103,7 +89,7 @@ class UserCustom {
       User? user = credential.user;
 
       // Отправляем письмо с подтверждением
-      await user?.sendEmailVerification();
+      //await user?.sendEmailVerification();
 
       // Возвращаем UID
       return user?.uid;
@@ -130,10 +116,17 @@ class UserCustom {
     }
   }
 
+  static UserCustom getEmptyUser(){
+    return UserCustom(uid: '', email: '', name: '');
+  }
+
   static Future<String> signOut() async {
     try {
+
       await FirebaseAuth.instance.signOut();
-      currentUser = null; // Обнуляем текущего пользователя при выходе
+      //currentUser = null; // Обнуляем текущего пользователя при выходе
+
+      DbInfoManager.clearAllInfoInManager();
 
       return 'ok';
     } catch (e) {
@@ -198,4 +191,13 @@ class UserCustom {
     }
   }
 
+  factory UserCustom.fromSnapshot(DataSnapshot snapshot) {
+
+
+    return UserCustom(
+        uid: snapshot.child('uid').value.toString(),
+      email: snapshot.child('email').value.toString(),
+      name: snapshot.child('name').value.toString(),
+    );
+  }
 }

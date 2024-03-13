@@ -320,10 +320,6 @@ class RegistrationScreenState extends State<RegistrationScreen> {
           uid: uid,
           email: email,
           name: name,
-          lastname: "",
-          phone: "",
-          gender: '',
-          avatar: defaultImage
       );
 
       await userInfo.publishToDb();
