@@ -196,8 +196,8 @@ class CustomTheme {
 
             labelStyle: TextStyle(
               color: AppColors.greyLight,
-              fontSize: 16,
-              fontFamily: 'SfProDisplay',
+              fontSize: 14,
+              fontFamily: 'sf_custom',
               fontWeight: FontWeight.normal,
 
             ),
@@ -205,7 +205,7 @@ class CustomTheme {
             floatingLabelStyle: TextStyle(
               color: AppColors.greyLight,
               fontSize: 16,
-              fontFamily: 'SfProDisplay',
+              fontFamily: 'sf_custom',
               fontWeight: FontWeight.normal,
 
             ),
@@ -213,7 +213,7 @@ class CustomTheme {
             hintStyle: TextStyle(
               color: AppColors.white,
               fontSize: 16,
-              fontFamily: 'SfProDisplay',
+              fontFamily: 'sf_custom',
               fontWeight: FontWeight.normal,
 
             ),

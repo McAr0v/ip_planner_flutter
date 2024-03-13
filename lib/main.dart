@@ -3,9 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ip_planner_flutter/design/dark_theme.dart';
 import 'package:ip_planner_flutter/navigation/custom_navigation.dart';
+import 'package:ip_planner_flutter/screens/confirm_email_screen.dart';
 import 'package:ip_planner_flutter/screens/login_screen.dart';
+import 'package:ip_planner_flutter/screens/privacy_screen.dart';
 import 'package:ip_planner_flutter/screens/registration_screen.dart';
-
 import 'design/app_colors.dart';
 import 'firebase_options.dart';
 
@@ -43,6 +44,16 @@ class MyApp extends StatelessWidget {
 
   const MyApp(this.currentUser, {super.key});
 
+  StatefulWidget _swapScreen(User? user){
+    if (user == null) {
+      return const LoginScreen();
+    } else if (user.emailVerified == false){
+      return const ConfirmEmailScreen();
+    } else {
+      return const CustomNavContainer();
+    }
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -53,7 +64,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),*/
 
-      home: currentUser != null ? const CustomNavContainer() : const LoginScreen(),
+      home: _swapScreen(currentUser),
       theme: CustomTheme.darkTheme,
       routes: {
         '/Profile': (context) => const CustomNavContainer(initialTabIndex: 3,),
@@ -62,6 +73,8 @@ class MyApp extends StatelessWidget {
         '/stat': (context) => const CustomNavContainer(initialTabIndex: 2),
         '/reg': (context) => const RegistrationScreen(),
         '/logIn': (context) => const LoginScreen(),
+        '/privacy_policy': (context) => const PrivacyPolicyPage(),
+        '/confirm_email': (context) => const ConfirmEmailScreen(),
         //'/privacy_policy': (context) => const PrivacyPolicyPage(),
         //'/reset_password_page': (context) => const ResetPasswordPage(),
         //'/cities': (context) => const CitiesListScreen(),

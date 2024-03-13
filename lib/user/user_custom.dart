@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../database/mixin_database.dart';
+
 class UserCustom {
   String uid;
   String email;
@@ -36,6 +38,30 @@ class UserCustom {
         gender: '',
         avatar: 'https://firebasestorage.googleapis.com/v0/b/dvij-flutter.appspot.com/o/avatars%2Fdvij_unknow_user.jpg?alt=media&token=b63ea5ef-7bdf-49e9-a3ef-1d34d676b6a7',
     );
+  }
+
+  Future<String> publishToDb() async {
+    String entityPath = '$uid/user_info';
+
+    Map<String, dynamic> data = generateEntityDataCode();
+
+    String entityPublishResult = await MixinDatabase.publishToDB(entityPath, data);
+
+    return entityPublishResult;
+
+  }
+
+  Map<String, dynamic> generateEntityDataCode() {
+
+    return <String, dynamic> {
+      'id': uid,
+      'name': name,
+      'lastname': lastname,
+      'phone': phone,
+      'email': email,
+      'gender': gender,
+      'avatar': avatar,
+    };
   }
 
   static Future<String?> resetPassword(String emailAddress) async {
