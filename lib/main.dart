@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ip_planner_flutter/design/dark_theme.dart';
 import 'package:ip_planner_flutter/navigation/custom_navigation.dart';
+import 'package:ip_planner_flutter/screens/login_screen.dart';
+import 'package:ip_planner_flutter/screens/registration_screen.dart';
 
 import 'design/app_colors.dart';
 import 'firebase_options.dart';
@@ -16,7 +18,10 @@ void main() async{
   );
 
   final FirebaseAuth auth = FirebaseAuth.instance;
-  if (auth.currentUser != null)
+
+  var currentUser = auth.currentUser;
+
+  if (currentUser != null)
   {
     //await local_user.UserCustom.readUserDataAndWriteCurrentUser(auth.currentUser!.uid);
   }
@@ -29,11 +34,14 @@ void main() async{
     ),
   );*/
 
-  runApp(const MyApp());
+  runApp(MyApp(currentUser));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+
+  final User? currentUser;
+
+  const MyApp(this.currentUser, {super.key});
 
   // This widget is the root of your application.
   @override
@@ -45,13 +53,15 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),*/
 
-      home: const CustomNavContainer(),
+      home: currentUser != null ? const CustomNavContainer() : const LoginScreen(),
       theme: CustomTheme.darkTheme,
       routes: {
         '/Profile': (context) => const CustomNavContainer(initialTabIndex: 3,),
         '/orders': (context) => const CustomNavContainer(initialTabIndex: 0),
         '/tasks': (context) => const CustomNavContainer(initialTabIndex: 1),
         '/stat': (context) => const CustomNavContainer(initialTabIndex: 2),
+        '/reg': (context) => const RegistrationScreen(),
+        '/logIn': (context) => const LoginScreen(),
         //'/privacy_policy': (context) => const PrivacyPolicyPage(),
         //'/reset_password_page': (context) => const ResetPasswordPage(),
         //'/cities': (context) => const CitiesListScreen(),

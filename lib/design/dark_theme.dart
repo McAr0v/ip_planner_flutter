@@ -236,6 +236,18 @@ class CustomTheme {
               ),
               borderRadius: BorderRadius.all(Radius.circular(15.0)), // Радиус скругления углов
             ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: AppColors.yellowLight, // Цвет границы
+                width: 2.0, // Ширина границы
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(15.0)), // Радиус скругления углов
+            ),
+
+            activeIndicatorBorder: BorderSide(
+              color: AppColors.yellowLight, // Цвет границы активного индикатора
+              width: 2.0, // Ширина границы активного индикатора
+            ),
 
             // Не активная граница
             enabledBorder: OutlineInputBorder(
@@ -252,20 +264,20 @@ class CustomTheme {
                 width: 2.0, // Ширина границы
               ),
               borderRadius: BorderRadius.all(Radius.circular(15.0)), // Радиус скругления углов
-            )
+            ),
 
 
         ),
 
         // Цветовая схема
-        /*colorScheme: const ColorScheme.dark(
-            primary: AppColors.brandColor,
+        colorScheme: const ColorScheme.dark(
+            primary: AppColors.yellowLight,
             secondary: AppColors.attentionRed,
-            background: AppColors.greyBackground,
-            onBackground: AppColors.greyOnBackground,
-            onPrimary: AppColors.greyOnBackground,
+            background: AppColors.black,
+            onBackground: AppColors.blackLight,
+            onPrimary: AppColors.black,
             onSurface: AppColors.white
-        ),*/
+        ),
 
         // Стиль кнопки
         buttonTheme: ButtonThemeData( // 4

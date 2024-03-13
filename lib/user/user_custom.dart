@@ -38,6 +38,34 @@ class UserCustom {
     );
   }
 
+  static Future<String?> resetPassword(String emailAddress) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: emailAddress,
+      );
+
+      // Если успешно отправлено письмо, возвращаем success
+      return 'success';
+
+    } on FirebaseAuthException catch (e) {
+
+      // Если ошибки, возвращаем коды ошибок
+
+      if (e.code == 'invalid-email') {
+        return e.code;
+      } else if (e.code == 'user-not-found') {
+        return e.code;
+      } else {
+        print(e.code);
+
+        return e.code;
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   static Future<String?> createUserWithEmailAndPassword(String emailAddress, String password) async {
     try {
       final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -132,14 +160,14 @@ class UserCustom {
 
       } else {
 
-        print(e.code);
+        print("КОД = ${e.code}");
 
         return null;
 
       }
 
     } catch (e) {
-      print(e);
+      print("КОД = ${e}");
       return null;
     }
   }
