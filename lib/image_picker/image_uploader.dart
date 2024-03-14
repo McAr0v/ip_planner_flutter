@@ -5,16 +5,11 @@ import 'dart:io';
 
 class ImageUploader {
   // Инициализируем Storage
-  //final FirebaseStorage _storage = FirebaseStorage.instance;
+  static final FirebaseStorage _storage = FirebaseStorage.instance;
 
   static Future<String?> uploadImageInUser(String userId, File pickedFile) async {
 
-    // Ссылка на ваш объект в Firebase Storage
-    // PS - чтобы не забивать память, я решил, что я буду перезаписывать старую аватарку
-
-    FirebaseStorage storage = FirebaseStorage.instance;
-
-    final storageRef = storage.ref().child(userId).child('avatar').child('avatar_$userId.jpeg');
+    final storageRef = _storage.ref().child(userId).child('avatar').child('avatar_$userId.jpeg');
 
     // Выгружаем аватар
     final uploadTask = storageRef.putFile(File(pickedFile.path));
@@ -25,7 +20,6 @@ class ImageUploader {
 
     // Возвращаем URL загруженного файла
     return downloadURL;
+
   }
-
-
 }

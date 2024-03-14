@@ -60,8 +60,6 @@ class CustomButton extends StatelessWidget {
       }
     }
 
-    var iconColor = getTextAndIconColor();
-
     // --- САМА КНОПКА ----
 
     return GestureDetector(
@@ -79,7 +77,6 @@ class CustomButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
               TextCustom(text: buttonText, color: getTextAndIconColor())
             ],
           ),

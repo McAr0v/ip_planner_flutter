@@ -2,9 +2,11 @@ import 'package:firebase_database/firebase_database.dart';
 
 mixin MixinDatabase{
 
+  static FirebaseDatabase instance = FirebaseDatabase.instance;
+
   static Future<DataSnapshot?> getInfoFromDB(String path) async {
     try {
-      final DatabaseReference reference = FirebaseDatabase.instance.ref().child(path);
+      final DatabaseReference reference = instance.ref().child(path);
       DataSnapshot snapshot = await reference.get();
       return snapshot;
     } catch (e) {
@@ -14,7 +16,7 @@ mixin MixinDatabase{
 
   static Future<String> publishToDB(String path, Map<String, dynamic> data) async {
     try {
-      await FirebaseDatabase.instance.ref().child(path).set(data);
+      await instance.ref().child(path).set(data);
       return 'ok';
     } catch (e) {
       return 'Ошибка при публикации данных: $e';
@@ -29,7 +31,7 @@ mixin MixinDatabase{
 
   static Future<String> deleteFromDb(String path) async {
     try {
-      final DatabaseReference reference = FirebaseDatabase.instance.ref().child(path);
+      final DatabaseReference reference = instance.ref().child(path);
 
       DataSnapshot snapshot = await reference.get();
 
@@ -39,7 +41,7 @@ mixin MixinDatabase{
 
       await reference.remove();
 
-      return 'success';
+      return 'ok';
 
     } catch (error) {
       return 'Ошибка при удалении: $error';
@@ -47,6 +49,6 @@ mixin MixinDatabase{
   }
 
   static String? generateKey() {
-    return FirebaseDatabase.instance.ref().push().key;
+    return instance.ref().push().key;
   }
 }

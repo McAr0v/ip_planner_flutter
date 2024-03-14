@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ip_planner_flutter/design/buttons/button_state.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
-import '../design/app_colors.dart';
-import '../design/buttons/custom_button.dart';
-import '../design/snackBars/custom_snack_bar.dart';
-import '../design/text_widgets/text_custom.dart';
-import '../design/text_widgets/text_state.dart';
-import '../user/user_custom.dart';
+import '../../design/app_colors.dart';
+import '../../design/buttons/custom_button.dart';
+import '../../design/snackBars/custom_snack_bar.dart';
+import '../../design/text_widgets/text_custom.dart';
+import '../../design/text_widgets/text_state.dart';
+import '../auth_manager.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});
@@ -92,7 +92,7 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
                               String email = emailController.text;
 
                               // Сброс пароля
-                              String? textMessage = await UserCustom.resetPassword(email);
+                              String? textMessage = await AuthManager.resetPassword(email);
 
                               // --- Если есть результат функции сброса ----
 

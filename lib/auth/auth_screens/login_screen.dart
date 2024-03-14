@@ -1,15 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ip_planner_flutter/auth/auth_manager.dart';
 import 'package:ip_planner_flutter/design/buttons/button_state.dart';
 import 'package:ip_planner_flutter/design/buttons/custom_button.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
-import 'package:ip_planner_flutter/screens/reset_password_page.dart';
-import '../database/database_info_manager.dart';
-import '../design/app_colors.dart';
-import '../design/snackBars/custom_snack_bar.dart';
-import '../user/user_custom.dart';
+import 'package:ip_planner_flutter/auth/auth_screens/reset_password_page.dart';
+import '../../database/database_info_manager.dart';
+import '../../design/app_colors.dart';
+import '../../design/snackBars/custom_snack_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,14 +20,10 @@ class LoginScreen extends StatefulWidget {
 
 class LoginScreenState extends State<LoginScreen> {
 
-  // Переменная для перенаправления пользователя !! НЕ УДАЛЯТЬ !!!
-  final FirebaseAuth auth = FirebaseAuth.instance;
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   bool showForgotPasswordButton = false;
-  bool showRegButton = true;
   bool userNotFound = false;
 
   bool loading = false;
@@ -60,8 +55,6 @@ class LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-
-                          //const SizedBox(height: 25.0),
 
                           const TextCustom(text: "Вход", textState: TextState.headlineBig, color: AppColors.yellowLight,),
 
@@ -128,7 +121,7 @@ class LoginScreenState extends State<LoginScreen> {
                                 String email = emailController.text;
                                 String password = passwordController.text;
 
-                                String? uid = await UserCustom.signInWithEmailAndPassword(email, password, context);
+                                String? uid = await AuthManager.signInWithEmailAndPassword(email, password, context);
 
                                 if (uid != null) {
                                   _reactOnUid(uid);

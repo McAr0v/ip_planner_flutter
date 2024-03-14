@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:ip_planner_flutter/navigation/bottom_bar_design.dart';
-import 'package:ip_planner_flutter/screens/login_screen.dart';
 import 'package:ip_planner_flutter/screens/profile_screen.dart';
 import 'package:ip_planner_flutter/screens/stat_screen.dart';
 import 'package:ip_planner_flutter/screens/task_screen.dart';
-
-// ---- ВСЯ НАВИГАЦИЯ ЗДЕСЬ! ----
+import '../screens/order_screen.dart';
 
 class CustomNavContainer extends StatefulWidget {
   final int initialTabIndex;
 
-  const CustomNavContainer({Key? key, this.initialTabIndex = 1})
-      : super(key: key);
+  const CustomNavContainer({super.key, this.initialTabIndex = 1});
 
   @override
   CustomNavContainerState createState() => CustomNavContainerState();
@@ -44,9 +41,7 @@ class CustomNavContainerState extends State<CustomNavContainer>
       body: TabBarView(
         controller: _tabController,
         children: const [
-
-          //OrderScreen(),
-          LoginScreen(),
+          OrderScreen(),
           TaskScreen(),
           StatScreen(),
           ProfileScreen(),

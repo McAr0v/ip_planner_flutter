@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:ip_planner_flutter/auth/auth_manager.dart';
 import 'package:ip_planner_flutter/design/buttons/button_state.dart';
 import 'package:ip_planner_flutter/design/buttons/custom_button.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
-import 'package:ip_planner_flutter/screens/profile_screen.dart';
-import '../database/database_info_manager.dart';
-import '../design/app_colors.dart';
-import '../design/snackBars/custom_snack_bar.dart';
-import '../design/text_widgets/text_with_link.dart';
-import '../user/user_custom.dart';
+import '../../database/database_info_manager.dart';
+import '../../design/app_colors.dart';
+import '../../design/snackBars/custom_snack_bar.dart';
+import '../../design/text_widgets/text_with_link.dart';
+import '../../user/user_custom.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -25,11 +25,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  String defaultImage = 'https://firebasestorage.googleapis.com/v0/b/ipplanner-fdba7.appspot.com/o/avatar.png?alt=media&token=1a568db0-9462-404f-9d03-f9284ed9bc13';
-
   bool loading = false;
-  bool showLogInButton = true;
-  bool haveEmailInBd = false;
   bool privacyPolicyChecked = false;
   bool _isObscured = true;
 
@@ -126,7 +122,6 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                                   onPressed: _togglePasswordVisibility,
                                 )
                             ),
-                            // Отобразить / скрыть пароль
                             obscureText: _isObscured,
                           ),
                           const SizedBox(height: 20.0),
@@ -141,7 +136,6 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                                   togglePrivacyPolicyChecked();
                                 },
                               ),
-                              // ---- Надпись у чекбокса -----
                               SizedBox(
                                 width: MediaQuery.of(context).size.width*0.75,
                                 child: const TextWithLink(
@@ -188,7 +182,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                                   String email = emailController.text;
                                   String password = passwordController.text;
 
-                                  String? uid = await UserCustom.createUserWithEmailAndPassword(email, password);
+                                  String? uid = await AuthManager.createUserWithEmailAndPassword(email, password);
 
                                   if (uid != null){
 

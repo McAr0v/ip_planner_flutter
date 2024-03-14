@@ -1,14 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ip_planner_flutter/design/buttons/button_state.dart';
+import 'package:ip_planner_flutter/auth/auth_manager.dart';
 import 'package:ip_planner_flutter/design/buttons/custom_button.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
-import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
-import 'package:ip_planner_flutter/screens/reset_password_page.dart';
 import '../database/database_info_manager.dart';
-import '../design/app_colors.dart';
-import '../design/snackBars/custom_snack_bar.dart';
 import '../user/user_custom.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -21,43 +16,21 @@ class ProfileScreen extends StatefulWidget {
 
 class ProfileScreenState extends State<ProfileScreen> {
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  UserCustom currentUser = UserCustom.getEmptyUser();
+  UserCustom currentUser = UserCustom.empty();
 
-  bool loading = true;
+  bool loading = false;
 
   @override
   void initState() {
-
-    getInfoFromDb(auth.currentUser!.uid);
-
-  }
-
-  Future<void> getInfoFromDb(String uid) async {
-
-    setState(() {
-      loading = true;
-    });
-    if (DbInfoManager.currentUser.name != ''){
-      currentUser = DbInfoManager.currentUser;
-    } /*else {
-      await DbInfoManager.getInfoFromDbAndUpdate(auth.currentUser!.uid);
-      if (DbInfoManager.currentUser.name != ''){
-        currentUser = DbInfoManager.currentUser;
-      }
-    }*/
-
-    setState(() {
-      loading = false;
-    });
-
+    super.initState();
+    currentUser = DbInfoManager.currentUser;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextCustom(text: '123',),
+        title: const TextCustom(text: '123',),
       ),
       body: SingleChildScrollView(
         child: Stack (
@@ -70,11 +43,11 @@ class ProfileScreenState extends State<ProfileScreen> {
                   TextCustom(text: currentUser.uid),
                   TextCustom(text: currentUser.name),
                   TextCustom(text: currentUser.email),
-                  SizedBox(height: 50,),
+                  const SizedBox(height: 50,),
                   CustomButton(
                       buttonText: 'Выйти',
                       onTapMethod: (){
-                        UserCustom.signOut();
+                        AuthManager.signOut();
 
                         Navigator.pushNamedAndRemoveUntil(
                           context,
