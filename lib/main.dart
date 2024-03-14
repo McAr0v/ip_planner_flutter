@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:ip_planner_flutter/database/database_info_manager.dart';
 import 'package:ip_planner_flutter/design/dark_theme.dart';
 import 'package:ip_planner_flutter/navigation/custom_navigation.dart';
-import 'package:ip_planner_flutter/screens/confirm_email_screen.dart';
 import 'package:ip_planner_flutter/screens/login_screen.dart';
 import 'package:ip_planner_flutter/screens/privacy_screen.dart';
 import 'package:ip_planner_flutter/screens/registration_screen.dart';
-import 'package:ip_planner_flutter/user/user_custom.dart';
 import 'design/app_colors.dart';
 import 'firebase_options.dart';
 
@@ -24,12 +22,10 @@ void main() async{
 
   var currentUser = auth.currentUser;
 
-  if (currentUser != null && currentUser.emailVerified)
+  if (currentUser != null)
   {
     await DbInfoManager.getInfoFromDbAndUpdate(currentUser.uid);
-    //UserCustom tempUser = UserCustom.empty(currentUser.uid, currentUser.email!);
-    //await tempUser.getEntityByIdFromDb(currentUser.uid);
-    //await local_user.UserCustom.readUserDataAndWriteCurrentUser(auth.currentUser!.uid);
+
   }
 
   // Посмотреть в движе - это слушатель изменений при входе выходе пользователя
@@ -52,8 +48,6 @@ class MyApp extends StatelessWidget {
   StatefulWidget _swapScreen(User? user){
     if (user == null) {
       return const LoginScreen();
-    } else if (user.emailVerified == false){
-      return const ConfirmEmailScreen();
     } else {
       return const CustomNavContainer();
     }
@@ -79,7 +73,6 @@ class MyApp extends StatelessWidget {
         '/reg': (context) => const RegistrationScreen(),
         '/logIn': (context) => const LoginScreen(),
         '/privacy_policy': (context) => const PrivacyPolicyPage(),
-        '/confirm_email': (context) => const ConfirmEmailScreen(),
 
         // Другие маршруты вашего приложения
       },

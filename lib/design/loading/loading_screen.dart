@@ -6,7 +6,7 @@ import '../app_colors.dart';
 class LoadingScreen extends StatelessWidget {
   final String loadingText;
 
-  const LoadingScreen({super.key, this.loadingText = 'Подожди чуть-чуть) Идет загрузка'});
+  const LoadingScreen({super.key, this.loadingText = 'Подождите, идет загрузка'});
 
   // ---- ВИДЖЕТ ЭКРАНА ЗАГРУЗКИ ----
 

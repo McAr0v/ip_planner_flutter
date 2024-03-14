@@ -42,156 +42,152 @@ class LoginScreenState extends State<LoginScreen> {
         children: [
           if (loading) const LoadingScreen()
 
-          else SizedBox(
+          else SingleChildScrollView(
+              child: Center(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/log_in_image_1.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Container(
+                    color: AppColors.black.withOpacity(0.7),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
 
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/log_in_image_2.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
+                          //const SizedBox(height: 25.0),
 
-              child: Container(
-                color: AppColors.black.withOpacity(0.75),
+                          const TextCustom(text: "Вход", textState: TextState.headlineBig, color: AppColors.yellowLight,),
 
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(20, 100, 20, 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                          const SizedBox(height: 15.0),
 
-                      //const SizedBox(height: 25.0),
+                          const TextCustom(text: "Войдите в свой аккаунт для доступа к функциям приложения", textState: TextState.bodySmall),
 
-                      const TextCustom(text: "Вход", textState: TextState.headlineBig, color: AppColors.yellowLight,),
+                          const SizedBox(height: 25.0),
 
-                      const SizedBox(height: 15.0),
+                          TextField(
+                            style: const TextStyle(
+                              color: AppColors.white,
+                              fontSize: 16,
+                              fontFamily: 'sf_custom',
+                              fontWeight: FontWeight.normal,
+                            ),
+                            controller: emailController,
+                            decoration: const InputDecoration(
+                              fillColor: Colors.transparent,
+                              labelText: 'Email',
+                              prefixIcon: Icon(Icons.email),
 
-                      const TextCustom(text: "Привет! Мы рады видеть тебя снова!)", textState: TextState.bodyMedium),
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          const SizedBox(height: 16.0),
 
-                      const SizedBox(height: 25.0),
+                          // ---- ПОЛЕ ПАРОЛЬ -----
 
-                      TextField(
-                        style: const TextStyle(
-                          color: AppColors.white,
-                          fontSize: 16,
-                          fontFamily: 'sf_custom',
-                          fontWeight: FontWeight.normal,
-                        ),
-                        controller: emailController,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(Icons.email),
+                          TextField(
+                            style: const TextStyle(
+                              color: AppColors.white,
+                              fontSize: 16,
+                              fontFamily: 'sf_custom',
+                              fontWeight: FontWeight.normal,
 
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                      const SizedBox(height: 16.0),
+                            ),
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                                fillColor: Colors.transparent,
+                                prefixIcon: const Icon(Icons.key),
+                                labelText: 'Пароль',
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isObscured ? Icons.visibility : Icons.visibility_off,
+                                  ),
+                                  onPressed: _togglePasswordVisibility,
+                                )
+                            ),
+                            // Отобразить / скрыть пароль
+                            obscureText: _isObscured,
+                          ),
+                          const SizedBox(height: 16.0),
 
-                      // ---- ПОЛЕ ПАРОЛЬ -----
+                          // --- КНОПКА ВОЙТИ -----
 
-                      TextField(
-                        style: const TextStyle(
-                          color: AppColors.white,
-                          fontSize: 16,
-                          fontFamily: 'sf_custom',
-                          fontWeight: FontWeight.normal,
+                          CustomButton(
+                              buttonText: "Войти",
+                              onTapMethod: () async {
+                                setState(() {
+                                  loading = true;
+                                });
 
-                        ),
-                        controller: passwordController,
-                        decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.key),
-                            labelText: 'Пароль',
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isObscured ? Icons.visibility : Icons.visibility_off,
+                                String email = emailController.text;
+                                String password = passwordController.text;
+
+                                String? uid = await UserCustom.signInWithEmailAndPassword(email, password, context);
+
+                                if (uid != null) {
+                                  _reactOnUid(uid);
+                                }
+                              }
+                          ),
+
+                          if (showForgotPasswordButton) const SizedBox(height: 30.0),
+
+                          if (showForgotPasswordButton) Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const TextCustom(text: 'Забыли пароль?', textState: TextState.bodyMedium,),
+                              const SizedBox(width: 10,),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const ResetPasswordPage()),
+                                  );
+                                },
+                                child: const TextCustom(text: 'Восстановить пароль', textState: TextState.bodyMedium, color: AppColors.yellowLight,),
                               ),
-                              onPressed: _togglePasswordVisibility,
-                            )
-                        ),
-                        // Отобразить / скрыть пароль
-                        obscureText: _isObscured,
+                            ],
+                          ),
+
+                          const SizedBox(height: 50,),
+
+                          const TextCustom(text: "Нет аккаунта?", textState: TextState.headlineSmall, color: AppColors.yellowLight,),
+
+                          const SizedBox(height: 10.0),
+
+
+                          const TextCustom(text: "Пройдите небольшую регистрацию и пользуйтесь приложением", textState: TextState.bodySmall),
+
+                          const SizedBox(height: 15.0),
+
+                          CustomButton(
+                              buttonText: "Зарегистрироваться",
+                              state: ButtonState.secondary,
+                              onTapMethod: () {
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  '/reg',
+                                      (route) => false,
+                                );
+
+                              }
+                          ),
+
+                          const SizedBox(height: 15.0),
+
+                        ],
                       ),
-                      const SizedBox(height: 16.0),
-
-                      // --- КНОПКА ВОЙТИ -----
-
-                      CustomButton(
-                          buttonText: "Войти",
-                          onTapMethod: () async {
-                            setState(() {
-                              loading = true;
-                            });
-
-                            String email = emailController.text;
-                            String password = passwordController.text;
-
-                            String? uid = await UserCustom.signInWithEmailAndPassword(email, password, context);
-
-                            if (uid != null) {
-                              _reactOnUid(uid);
-                            }
-                          }
-                      ),
-
-                      const SizedBox(height: 50,),
-
-                      if (showForgotPasswordButton) const SizedBox(height: 50.0),
-
-                      if (showForgotPasswordButton) const TextCustom(
-                        text: 'Ой, пароль куда-то потерялся? Не переживай, мы тебя не бросим! Давай восстановим доступ в твой аккаунт 🚀🔓',
-                        textState: TextState.bodyMedium,
-                      ),
-
-                      if (showForgotPasswordButton) const SizedBox(height: 20.0),
-
-                      if (showForgotPasswordButton) CustomButton(
-                        state: ButtonState.secondary,
-                        buttonText: 'Восстановить доступ',
-                        onTapMethod: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const ResetPasswordPage()),
-                          );
-                        },
-                      ),
-
-                      if (showRegButton) const TextCustom(text: "Нет аккаунта?", textState: TextState.headlineSmall, color: AppColors.yellowLight,),
-
-                      if (showRegButton) const SizedBox(height: 15.0),
-
-                      if (showRegButton && userNotFound) Text(
-                          'Ой-ой! Нет пользователя с таким Email. Может нужно создать новый аккаунт? 📩🔍',
-                          style: Theme.of(context).textTheme.bodyMedium
-                      ),
-
-                      if (showRegButton && !userNotFound) const TextCustom(text: "Не беда! Присоединяйся к нам! Регистрируйся сейчас и открой для себя все преимущества нашего приложения. 🚀😊", textState: TextState.bodyMedium),
-
-                      if (showRegButton) const SizedBox(height: 15.0),
-
-                      if (showRegButton) CustomButton(
-                          buttonText: "Зарегистрироваться",
-                          state: ButtonState.secondary,
-                          onTapMethod: () {
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              '/reg',
-                                  (route) => false,
-                            );
-
-                          }
-                      ),
-
-                      const SizedBox(height: 15.0),
-
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
+              )
+          )
         ],
       ),
     );
@@ -203,7 +199,7 @@ class LoginScreenState extends State<LoginScreen> {
       '/Profile', // Название маршрута, которое вы задаете в MaterialApp
           (route) => false,
     );
-    showSnackBar('Пингвин вошел в холл. Повторяю, пингвин вошел в холл! Ваш вход успешен, герой. Приготовьтесь к веселью! 🐧🌟', Colors.green, 2);
+    showSnackBar('Вход успешно выполнен', Colors.green, 2);
 
   }
 
@@ -216,13 +212,6 @@ class LoginScreenState extends State<LoginScreen> {
   void updateForgotPasswordButton(bool newValue) {
     setState(() {
       showForgotPasswordButton = newValue;
-    });
-  }
-
-  // Функция обновления состояния "Может нужна регистрация?"
-  void updateShowRegButton(bool newValue) {
-    setState(() {
-      showRegButton = newValue;
     });
   }
 
@@ -241,9 +230,8 @@ class LoginScreenState extends State<LoginScreen> {
         loading = false;
         userNotFound = false;
       });
-      updateShowRegButton(false);
       updateForgotPasswordButton(true);
-      showSnackBar('Упс! Пароль не верен( Давай попробуем еще раз – мы верим в твою память! 🔐🔄', AppColors.attentionRed, 2);
+      showSnackBar('Неверный пароль. Попробуйте еще раз', AppColors.attentionRed, 2);
 
     } else if (uid == 'user-not-found') {
 
@@ -251,9 +239,8 @@ class LoginScreenState extends State<LoginScreen> {
         loading = false;
         userNotFound = true;
       });
-      updateShowRegButton(true);
       updateForgotPasswordButton(false);
-      showSnackBar('Упс! Похоже, такой Email не зарегистрирован. Может, опечатка? Попробуй еще раз или зарегистрируйcя! 📧🤔', AppColors.attentionRed, 2);
+      showSnackBar('Пользователь с таким Email не найден', AppColors.attentionRed, 2);
 
     } else if (uid == 'too-many-requests') {
 
@@ -261,19 +248,24 @@ class LoginScreenState extends State<LoginScreen> {
         loading = false;
         userNotFound = false;
       });
-      updateShowRegButton(false);
       updateForgotPasswordButton(false);
-      showSnackBar('Ой! Слишком много попыток. В целях безопасности мы заблокировали вход с твоего устройства. Попробуй позже! 🔒⏳', AppColors.attentionRed, 2);
-
+      _showAlertDialogWithButton(
+          context,
+          "Внимание!",
+          'Слишком много неудачных попыток входа. \n \nВ целях безопасности мы на время заблокировали вход с устройства. \n \nПопробуйте позже!',
+          'Ок'
+      );
     } else if (uid == 'channel-error') {
 
       setState(() {
         loading = false;
         userNotFound = false;
       });
-      updateShowRegButton(false);
       updateForgotPasswordButton(false);
-      showSnackBar('Что-то пропущено! Давайте вместе заполним недостающие поля, чтобы вы могли продолжить веселье.', AppColors.attentionRed, 2);
+
+      showSnackBar('Все поля должны быть обязательно заполнены', AppColors.attentionRed, 2);
+
+
 
     } else if (uid == 'invalid-email') {
 
@@ -281,9 +273,8 @@ class LoginScreenState extends State<LoginScreen> {
         loading = false;
         userNotFound = false;
       });
-      updateShowRegButton(false);
       updateForgotPasswordButton(false);
-      showSnackBar('Ой, что-то с форматом Email пошло не так. Удостоверься, что вводишь его правильно, и давай еще раз! 📭🔄', AppColors.attentionRed, 2);
+      showSnackBar('Некорректный формат Email', AppColors.attentionRed, 2);
 
     } else {
 
@@ -297,6 +288,33 @@ class LoginScreenState extends State<LoginScreen> {
       });
 
     }
+  }
+
+  void _showAlertDialogWithButton(BuildContext context, String headlineText, String descText, String buttonText) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.warning, color: AppColors.yellowLight,),
+              const SizedBox(width: 15,),
+              Expanded(child: TextCustom(text: headlineText, textState: TextState.headlineSmall, color: AppColors.yellowLight,),),
+            ],
+          ),
+          content: TextCustom(text: descText, textState: TextState.bodyMedium, color: AppColors.white,),
+          actions: <Widget>[
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop(); // Закрываем диалог при нажатии на кнопку
+              },
+              child: TextCustom(text: buttonText, textState: TextState.bodyMedium, color: Colors.green,),
+            )
+          ],
+        );
+      },
+    );
   }
 
 }

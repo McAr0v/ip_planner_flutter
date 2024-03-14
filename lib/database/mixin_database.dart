@@ -15,7 +15,7 @@ mixin MixinDatabase{
   static Future<String> publishToDB(String path, Map<String, dynamic> data) async {
     try {
       await FirebaseDatabase.instance.ref().child(path).set(data);
-      return 'success';
+      return 'ok';
     } catch (e) {
       return 'Ошибка при публикации данных: $e';
     }

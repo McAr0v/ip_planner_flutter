@@ -70,8 +70,7 @@ dev_dependencies:
 flutter:
 
   assets:
-    - assets/log_in_image.png
-    - assets/log_in_image_2.png
+    - assets/log_in_image_1.png
 
   fonts:
     - family: sf_custom

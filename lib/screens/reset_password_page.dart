@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ip_planner_flutter/design/buttons/button_state.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
-import 'package:ip_planner_flutter/screens/registration_screen.dart';
 import '../design/app_colors.dart';
 import '../design/buttons/custom_button.dart';
 import '../design/snackBars/custom_snack_bar.dart';
@@ -24,7 +24,6 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
   // --- Контроллеры для полей ввода ----
   final TextEditingController emailController = TextEditingController();
 
-  bool showRegButton = false;
   bool loading = false;
 
   @override
@@ -35,94 +34,97 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
         children: [
           if (loading) const LoadingScreen()
           else SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 50, 20, 50),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
 
-                const SizedBox(height: 25.0),
-
-                const TextCustom(text: "Восстановление пароля", textState: TextState.headlineMedium, color: AppColors.yellowLight,),
-
-                const SizedBox(height: 15.0),
-
-                const TextCustom(text: 'Забытый пароль – не повод для печали! Укажи свою почту, и мы отправим тебе инструкцию по восстановлению пароля', textState: TextState.bodyMedium),
-
-                const SizedBox(height: 25.0),
-
-                // ---- Поле ввода email -----
-
-                TextField(
-                  style: const TextStyle(
-                    color: AppColors.white,
-                    fontSize: 16,
-                    fontFamily: 'sf_custom',
-                    fontWeight: FontWeight.normal,
+            child: Center(
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/log_in_image_1.png'),
+                    fit: BoxFit.cover,
                   ),
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
+                ),
+                child: Container(
+                  color: AppColors.black.withOpacity(0.7),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+
+                        const TextCustom(text: "Восстановление пароля", textState: TextState.headlineMedium, color: AppColors.yellowLight,),
+
+                        const SizedBox(height: 15.0),
+
+                        const TextCustom(text: 'Введите вашу почту. Мы отправим письмо с инструкцией по сбросу пароля', textState: TextState.bodySmall),
+
+                        const SizedBox(height: 25.0),
+
+                        // ---- Поле ввода email -----
+
+                        TextField(
+                          style: const TextStyle(
+                            color: AppColors.white,
+                            fontSize: 16,
+                            fontFamily: 'sf_custom',
+                            fontWeight: FontWeight.normal,
+                          ),
+                          controller: emailController,
+                          decoration: const InputDecoration(
+                            fillColor: Colors.transparent,
+                            labelText: 'Email',
+                            prefixIcon: Icon(Icons.email),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                        const SizedBox(height: 25.0),
+
+                        // ----- Кнопка восстановления пароля ----
+
+                        CustomButton(
+                            buttonText: 'Восстановить пароль',
+                            onTapMethod: () async {
+
+                              setState(() {
+                                loading = true;
+                              });
+
+                              String email = emailController.text;
+
+                              // Сброс пароля
+                              String? textMessage = await UserCustom.resetPassword(email);
+
+                              // --- Если есть результат функции сброса ----
+
+                              if (textMessage != null) {
+
+                                reactOnTextMessage(textMessage);
+
+                              } else {
+
+                                setState(() {
+                                  loading = false;
+                                });
+
+                                showSnackBar('Что-то пошло не так, и мы с ним не знакомы. Попробуй войти позже', AppColors.attentionRed, 5);
+
+                              }
+                            }
+                        ),
+                        const SizedBox(height: 20.0),
+
+                        CustomButton(
+                            buttonText: 'Вернуться назад',
+                            state: ButtonState.secondary,
+                            onTapMethod: (){
+                              Navigator.pop(context);
+                            }
+                        ),
+                      ],
+                    ),
                   ),
-                  keyboardType: TextInputType.emailAddress,
                 ),
-                const SizedBox(height: 16.0),
-
-                // ----- Кнопка восстановления пароля ----
-
-                CustomButton(
-                    buttonText: 'Восстановить пароль',
-                    onTapMethod: () async {
-
-                      setState(() {
-                        loading = true;
-                      });
-
-                      String email = emailController.text;
-
-                      // Сброс пароля
-                      String? textMessage = await UserCustom.resetPassword(email);
-
-                      // --- Если есть результат функции сброса ----
-
-                      if (textMessage != null) {
-
-                        reactOnTextMessage(textMessage);
-
-                      } else {
-
-                        setState(() {
-                          loading = false;
-                        });
-
-                        showSnackBar('Что-то пошло не так, и мы с ним не знакомы. Попробуй войти позже, и, возможно, все недоразумение разрешится', AppColors.attentionRed, 5);
-
-                      }
-                    }
-                ),
-
-                // ---- Контент кнопки регистрации -----
-
-                if (showRegButton) const SizedBox(height: 50.0),
-
-                if (showRegButton) const TextCustom(
-                    text: 'Ой-ой! Нет пользователя с таким Email. Может нужно создать новый аккаунт? 📩🔍',
-                    textState: TextState.bodyMedium,
-                ),
-
-                if (showRegButton) const SizedBox(height: 20.0),
-
-                if (showRegButton) CustomButton(
-                  state: ButtonState.secondary,
-                  buttonText: 'Зарегистрироваться',
-                  onTapMethod: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const RegistrationScreen()),
-                    );
-                  },
-                ),
-              ],
+              ),
             ),
           ),
         ],
@@ -146,40 +148,53 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  void updateShowRegButton(bool newValue) {
-    setState(() {
-      showRegButton = newValue;
-    });
-  }
-
   void reactOnTextMessage(String textMessage) {
     if (textMessage == 'invalid-email') {
-      updateShowRegButton(false);
+
       setState(() {
         loading = false;
       });
-      showSnackBar('Ой, что-то с форматом Email пошло не так. Удостоверься, что вводишь его правильно, и давай еще раз! 📭🔄', AppColors.attentionRed, 5);
+      showSnackBar('Неверный формат Email', AppColors.attentionRed, 2);
     } else if (textMessage == 'user-not-found') {
-      updateShowRegButton(true);
+
       setState(() {
         loading = false;
       });
-      showSnackBar('Упс! Похоже, такой Email не зарегистрирован. Может, опечатка? Попробуй еще раз или зарегистрируйcя! 📧🤔', AppColors.attentionRed, 5);
+      showSnackBar('Пользователя с таким Email не существует', AppColors.attentionRed, 2);
     } else if (textMessage == 'too-many-requests') {
-      updateShowRegButton(false);
+      _showAlertDialogWithButton(
+        context: context,
+        headlineText: 'Внимание!',
+        descText: 'Слишком много неудачных попыток входа. \n \nВ целях безопасности мы на время заблокировали вход с устройства. \n \nПопробуйте позже!',
+        buttonText: "Ок",
+        onTapMethod: (){
+          navigateToLogin();
+        },
+          icon: Icons.warning,
+          color: AppColors.yellowLight
+      );
+
       setState(() {
         loading = false;
       });
-      showSnackBar('Ой! Слишком много попыток. В целях безопасности мы заблокировали вход с твоего устройства. Попробуй позже! 🔒⏳', AppColors.attentionRed, 5);
     } else if (textMessage == 'missing-email') {
-      updateShowRegButton(false);
+
       setState(() {
         loading = false;
       });
-      showSnackBar('Без твоей почты мы в тупике. Поделись ею, и мы вмиг отправим инструкции по восстановлению пароля.', AppColors.attentionRed, 5);
+      showSnackBar('Введите Email', AppColors.attentionRed, 5);
     } else if (textMessage == 'success') {
-      showSnackBar('Проверь свою почту – мы отправили инструкции по восстановлению пароля. Следуй шагам и верни доступ к аккаунту', Colors.green,5);
-      navigateToLogin();
+      _showAlertDialogWithButton(
+          context: context,
+          headlineText: 'Сброс успешно выполнен',
+          descText: 'Проверьте почту – мы отправили инструкции по восстановлению пароля.',
+          buttonText: "Ок",
+        onTapMethod: (){
+          navigateToLogin();
+        },
+        icon: FontAwesomeIcons.check,
+        color: Colors.green
+      );
       setState(() {
         loading = false;
       });
@@ -190,4 +205,39 @@ class ResetPasswordPageState extends State<ResetPasswordPage> {
       showSnackBar('Ой! Что-то у нас пошло не так, и мы в печали. Попробуй войти позже', AppColors.attentionRed, 5);
     }
   }
+
+  void _showAlertDialogWithButton(
+      {
+        required BuildContext context,
+        required String headlineText,
+        required String descText,
+        required String buttonText,
+        required VoidCallback onTapMethod,
+        Color color = Colors.green,
+        IconData icon = Icons.warning
+      }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: color,),
+              const SizedBox(width: 15,),
+              Expanded(child: TextCustom(text: headlineText, textState: TextState.headlineSmall, color: color,),),
+            ],
+          ),
+          content: TextCustom(text: descText, textState: TextState.bodyMedium, color: AppColors.white,),
+          actions: <Widget>[
+            GestureDetector(
+              onTap: onTapMethod,
+              child: TextCustom(text: buttonText, textState: TextState.bodyMedium, color: Colors.green,),
+            )
+          ],
+        );
+      },
+    );
+  }
+
 }

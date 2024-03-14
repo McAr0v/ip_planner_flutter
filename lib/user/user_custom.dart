@@ -124,7 +124,6 @@ class UserCustom {
     try {
 
       await FirebaseAuth.instance.signOut();
-      //currentUser = null; // Обнуляем текущего пользователя при выходе
 
       DbInfoManager.clearAllInfoInManager();
 
