@@ -309,7 +309,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
           name: name,
       );
 
-      String result = await userInfo.publishToDb();
+      String result = await userInfo.publishToDb(uid);
 
       if (result == 'ok'){
         await DbInfoManager.getInfoFromDbAndUpdate(userInfo.uid);

@@ -3,19 +3,35 @@ import 'package:ip_planner_flutter/abstract_classes/entity_from_db.dart';
 import 'package:ip_planner_flutter/dates/date_mixin.dart';
 import 'package:ip_planner_flutter/pay/pay_type.dart';
 import '../database/mixin_database.dart';
+import 'expense_type.dart';
 
-class Pay with DateMixin implements EntityFromDb{
+class Expense with DateMixin implements EntityFromDb{
 
   String id;
   int sum;
   PayType payType;
+  ExpenseType expenseType;
   String idEntity;
-  DateTime payDate;
+  DateTime expenseDate;
 
-  Pay({required this.id, required this.sum, required this.payType, required this.idEntity, required this.payDate});
+  Expense({
+    required this.id,
+    required this.sum,
+    required this.payType,
+    required this.idEntity,
+    required this.expenseType,
+    required this.expenseDate
+  });
 
-  factory Pay.empty(){
-    return Pay(id: '', sum: 0, payType: PayType(), idEntity: "", payDate: DateTime(2100));
+  factory Expense.empty(){
+    return Expense(
+        id: '',
+        sum: 0,
+        payType: PayType(),
+        idEntity: "",
+        expenseDate: DateTime(2100),
+        expenseType: ExpenseType(),
+    );
   }
 
   @override
@@ -25,28 +41,33 @@ class Pay with DateMixin implements EntityFromDb{
       'sum': sum,
       'payType': payType.getPayTypeString(),
       'idEntity': idEntity,
-      'payDate': DateMixin.generateDateString(payDate)
+      'expenseDate': DateMixin.generateDateString(expenseDate),
+      'expenseType': expenseType.getExpenseTypeString(),
     };
   }
 
-  factory Pay.fromSnapshot(DataSnapshot snapshot) {
+  factory Expense.fromSnapshot(DataSnapshot snapshot) {
 
     PayType payType = PayType();
     payType.switchEnumFromString(snapshot.child('payType').value.toString());
 
-    return Pay(
+    ExpenseType expenseType = ExpenseType();
+    expenseType.switchEnumFromString(snapshot.child('expenseType').value.toString());
+
+    return Expense(
         id: snapshot.child('id').value.toString(),
         sum: int.parse(snapshot.child('sum').value.toString()),
         payType: payType,
         idEntity: snapshot.child('idEntity').value.toString(),
-        payDate: DateMixin.getDateFromString(snapshot.child('payDate').value.toString()),
+        expenseType: expenseType,
+        expenseDate: DateMixin.getDateFromString(snapshot.child('expenseDate').value.toString())
     );
 
   }
 
   @override
   Future<String> publishToDb(String userId) async {
-    String entityPath = '$userId/payments/$id';
+    String entityPath = '$userId/expenses/$id';
 
     Map<String, dynamic> data = generateEntityDataCode();
 
@@ -56,3 +77,4 @@ class Pay with DateMixin implements EntityFromDb{
   }
 
 }
+

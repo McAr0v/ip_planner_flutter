@@ -14,8 +14,8 @@ class UserCustom implements EntityFromDb {
   });
 
   @override
-  Future<String> publishToDb() async {
-    String entityPath = '$uid/user_info';
+  Future<String> publishToDb(String userId) async {
+    String entityPath = '$userId/user_info';
 
     Map<String, dynamic> data = generateEntityDataCode();
 
