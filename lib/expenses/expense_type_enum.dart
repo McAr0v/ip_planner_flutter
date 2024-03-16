@@ -16,4 +16,5 @@ enum ExpenseTypeEnum {
   clientEntertainment, // Развлечение клиентов
   officeSupplies, // Офисные принадлежности
   legalAndAccountingServices, // Юридические и бухгалтерские услуги
+  other // Прочее
 }

@@ -52,6 +52,9 @@ class ExpenseType {
       case "legalAndAccountingServices":
         this.expenseType = ExpenseTypeEnum.legalAndAccountingServices;
         break;
+      case "other":
+        this.expenseType = ExpenseTypeEnum.other;
+        break;
       default:
         this.expenseType = ExpenseTypeEnum.notChosen;
         break;
@@ -90,6 +93,8 @@ class ExpenseType {
         return needTranslate ? "Офисные принадлежности" : "officeSupplies";
       case ExpenseTypeEnum.legalAndAccountingServices:
         return needTranslate ? "Юридические и бухгалтерские услуги" : "legalAndAccountingServices";
+      case ExpenseTypeEnum.other:
+        return needTranslate ? "Прочее" : "other";
       default:
         return needTranslate ? "Не выбрано" : "notChosen";
     }
