@@ -10,13 +10,118 @@ class CustomTheme {
     return ThemeData(
       // Всплывающее оповещение
 
+      timePickerTheme: TimePickerThemeData(
+        backgroundColor: AppColors.black,
+        helpTextStyle: const TextStyle(
+            fontSize: 18,
+            fontFamily: 'sf_custom',
+            fontWeight: FontWeight.normal,
+            height: 1.3
+        ),
+
+        hourMinuteColor: AppColors.blackLight,
+
+        hourMinuteTextStyle: const TextStyle(
+            fontSize: 45,
+            fontFamily: 'sf_custom',
+            fontWeight: FontWeight.bold,
+        ),
+
+        dialTextColor: AppColors.graphite,
+
+        hourMinuteTextColor: AppColors.yellowLight,
+
+        padding: const EdgeInsets.all(30),
+
+        confirmButtonStyle: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+              return Colors.transparent;
+            },
+          ),
+          padding: MaterialStateProperty.resolveWith<EdgeInsets?>(
+                (Set<MaterialState> states) {
+              return const EdgeInsets.fromLTRB(20, 20, 0, 0);
+            },
+          ),
+          textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
+                (Set<MaterialState> states) {
+              return const TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'sf_custom',
+                  fontWeight: FontWeight.normal,
+                  //height: 1.3
+              );
+            },
+          ),
+          foregroundColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+              return Colors.green;
+            },
+          ),
+          side: MaterialStateProperty.resolveWith<BorderSide?>(
+                (Set<MaterialState> states) {
+              return const BorderSide(
+                color: Colors.transparent, // Цвет границы
+                width: 0.0, // Толщина границы
+              );
+            },
+          ),
+          minimumSize: MaterialStateProperty.resolveWith<Size?>(
+                (Set<MaterialState> states) {
+              return Size(0, 0); // Задайте минимальную ширину и высоту
+            },
+          ),
+        ),
+        cancelButtonStyle: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+              return Colors.transparent;
+            },
+          ),
+          padding: MaterialStateProperty.resolveWith<EdgeInsets?>(
+                (Set<MaterialState> states) {
+              return const EdgeInsets.fromLTRB(20, 20, 0, 0);
+            },
+          ),
+          textStyle: MaterialStateProperty.resolveWith<TextStyle?>(
+                (Set<MaterialState> states) {
+              return const TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'sf_custom',
+                  fontWeight: FontWeight.normal,
+                  //height: 1.3
+              );
+            },
+          ),
+          foregroundColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+              return AppColors.attentionRed;
+            },
+          ),
+          side: MaterialStateProperty.resolveWith<BorderSide?>(
+                (Set<MaterialState> states) {
+              return const BorderSide(
+                color: Colors.transparent, // Цвет границы
+                width: 0.0, // Толщина границы
+              );
+            },
+          ),
+          minimumSize: MaterialStateProperty.resolveWith<Size?>(
+                (Set<MaterialState> states) {
+              return Size(0, 0); // Задайте минимальную ширину и высоту
+            },
+          ),
+        )
+      ),
+
         snackBarTheme: const SnackBarThemeData(
             backgroundColor: AppColors.yellowLight,
             actionTextColor: AppColors.white,
             contentTextStyle: TextStyle(
                 color: AppColors.black,
                 fontSize: 16,
-                fontFamily: 'SfProDisplay',
+                fontFamily: 'sf_custom',
                 fontWeight: FontWeight.w400,
                 height: 1.1
             )
@@ -39,7 +144,7 @@ class CustomTheme {
             dayStyle: const TextStyle(
                 color: AppColors.white,
                 fontSize: 16,
-                fontFamily: 'SfProDisplay',
+                fontFamily: 'sf_custom',
                 fontWeight: FontWeight.normal,
                 height: 1.3
             ),
@@ -48,7 +153,7 @@ class CustomTheme {
             weekdayStyle: const TextStyle(
                 color: AppColors.greyLight,
                 fontSize: 16,
-                fontFamily: 'SfProDisplay',
+                fontFamily: 'sf_custom',
                 fontWeight: FontWeight.normal,
                 height: 1.3
             ),
@@ -76,7 +181,7 @@ class CustomTheme {
                     (Set<MaterialState> states) {
                   return const TextStyle(
                       fontSize: 16,
-                      fontFamily: 'SfProDisplay',
+                      fontFamily: 'sf_custom',
                       fontWeight: FontWeight.normal,
                       height: 1.3
                   );
@@ -116,7 +221,7 @@ class CustomTheme {
                     (Set<MaterialState> states) {
                   return const TextStyle(
                       fontSize: 16,
-                      fontFamily: 'SfProDisplay',
+                      fontFamily: 'sf_custom',
                       fontWeight: FontWeight.normal,
                       height: 1.3
                   );
@@ -153,7 +258,7 @@ class CustomTheme {
 
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            textStyle: const TextStyle(color: AppColors.white, fontSize: 16, fontFamily: 'SfProDisplay', fontWeight: FontWeight.normal),
+            textStyle: const TextStyle(color: AppColors.white, fontSize: 16, fontFamily: 'sf_custom', fontWeight: FontWeight.normal),
             padding: const EdgeInsets.all(10.0),
             minimumSize: const Size(double.infinity, 50),
             backgroundColor: AppColors.yellowLight,
@@ -169,7 +274,7 @@ class CustomTheme {
           // Настройка, чтобы при прокрутке не менялся цвет панели
           scrolledUnderElevation: 0.0,
           backgroundColor: AppColors.black,
-          titleTextStyle: TextStyle(color: AppColors.white, fontSize: 22, fontFamily: 'SfProDisplay', fontWeight: FontWeight.bold),
+          titleTextStyle: TextStyle(color: AppColors.white, fontSize: 22, fontFamily: 'sf_custom', fontWeight: FontWeight.bold),
 
         ),
 
@@ -316,7 +421,7 @@ class CustomTheme {
         listTileTheme: const ListTileThemeData(
           textColor: AppColors.white,
           iconColor: AppColors.white,
-          titleTextStyle: TextStyle(color: AppColors.white, fontSize: 16, fontFamily: 'SfProDisplay', fontWeight: FontWeight.normal),
+          titleTextStyle: TextStyle(color: AppColors.white, fontSize: 16, fontFamily: 'sf_custom', fontWeight: FontWeight.normal),
         ),
 
         dialogBackgroundColor: AppColors.black

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ip_planner_flutter/navigation/bottom_bar_design.dart';
 import 'package:ip_planner_flutter/screens/profile_screen.dart';
 import 'package:ip_planner_flutter/screens/stat_screen.dart';
-import 'package:ip_planner_flutter/screens/task_screen.dart';
+import 'package:ip_planner_flutter/task/task_screens/task_screen.dart';
 import '../screens/order_screen.dart';
 
 class CustomNavContainer extends StatefulWidget {

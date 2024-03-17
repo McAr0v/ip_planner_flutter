@@ -8,14 +8,15 @@ class TextCustom extends StatelessWidget {
   final Color color; // передаваемая переменная
   final String text;
   final bool softWrap;
+  final FontWeight? weight;
 
-  const TextCustom({super.key, required this.text, this.textState = TextState.bodyMedium, this.color = AppColors.white, this.softWrap = true}); // Указываем значения по умолчанию
+  const TextCustom({super.key, required this.text, this.textState = TextState.bodyMedium, this.color = AppColors.white, this.softWrap = true, this.weight}); // Указываем значения по умолчанию
 
   double _switchSize(TextState state){
     switch (state){
       case TextState.headlineBig: return 50;
       case TextState.headlineMedium: return 35;
-      case TextState.headlineSmall: return 30;
+      case TextState.headlineSmall: return 23;
       case TextState.bodyBig: return 18;
       case TextState.bodyMedium: return 16;
       case TextState.bodySmall: return 14;
@@ -67,7 +68,7 @@ class TextCustom extends StatelessWidget {
         height: _switchHeight(textState),
         color: color,
         fontSize: _switchSize(textState),
-        fontWeight: _switchWeight(textState)
+        fontWeight: weight ?? _switchWeight(textState)
       ),
       softWrap: softWrap,
     );

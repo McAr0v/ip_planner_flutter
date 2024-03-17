@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 mixin DateMixin {
 
   static DateTime getDateFromString(String date){
@@ -75,6 +77,8 @@ mixin DateMixin {
 
   }
 
+
+
   static String getHumanDateFromDateTime (DateTime date, {bool needYear = true})
   {
     String month = getMonthName('${date.month}');
@@ -85,6 +89,16 @@ mixin DateMixin {
       return '${getCorrectMonthOrDate(date.day)} $month';
     }
 
+  }
+
+  static String getHumanTimeFromDateTime (DateTime date)
+  {
+    return '${getCorrectMonthOrDate(date.hour)}:${getCorrectMonthOrDate(date.minute)}';
+  }
+
+  static String getHumanTime (TimeOfDay time)
+  {
+    return '${getCorrectMonthOrDate(time.hour)}:${getCorrectMonthOrDate(time.minute)}';
   }
 
   static bool nowIsInPeriod (DateTime startDate, DateTime endDate){
