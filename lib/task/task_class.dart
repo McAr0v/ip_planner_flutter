@@ -92,4 +92,15 @@ class TaskCustom with DateMixin implements EntityFromDb{
     return entityPublishResult;
   }
 
+  @override
+  Future<String> deleteFromDb(String userId) async {
+
+    String entityPath = '$userId/tasks/$id';
+
+    String entityDeleteResult = await MixinDatabase.deleteFromDb(entityPath);
+
+    return entityDeleteResult;
+
+  }
+
 }

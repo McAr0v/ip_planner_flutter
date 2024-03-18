@@ -48,4 +48,10 @@ class UserCustom implements EntityFromDb {
     );
 
   }
+
+  @override
+  Future<String> deleteFromDb(String userId) {
+    // TODO: implement deleteFromDb
+    throw UnimplementedError();
+  }
 }

@@ -6,6 +6,7 @@ import 'gender_class.dart';
 
 class ClientCustom with MixinDatabase implements EntityFromDb{
 
+  String id;
   String name;
   String lastName;
   String phone;
@@ -17,6 +18,7 @@ class ClientCustom with MixinDatabase implements EntityFromDb{
   Gender gender;
 
   ClientCustom({
+    required this.id,
     required this.name,
     this.lastName = '',
     required this.phone,
@@ -31,6 +33,7 @@ class ClientCustom with MixinDatabase implements EntityFromDb{
 
   factory ClientCustom.empty(){
     return ClientCustom(
+        id: '',
         name: '',
         phone: '',
         createDate: DateTime(2100),
@@ -45,6 +48,7 @@ class ClientCustom with MixinDatabase implements EntityFromDb{
     gender.switchEnumFromString(snapshot.child('gender').value.toString());
 
     return ClientCustom(
+        id: snapshot.child('id').value.toString(),
         name: snapshot.child('name').value.toString(),
         lastName: snapshot.child('lastName').value.toString(),
         phone: snapshot.child('phone').value.toString(),
@@ -61,6 +65,7 @@ class ClientCustom with MixinDatabase implements EntityFromDb{
   @override
   Map<String, dynamic> generateEntityDataCode() {
     return <String, dynamic> {
+      'id': id,
       'name': name,
       'lastName': lastName,
       'phone': phone,
@@ -75,13 +80,22 @@ class ClientCustom with MixinDatabase implements EntityFromDb{
 
   @override
   Future<String> publishToDb(String userId) async {
-    String entityPath = '$userId/clients/$phone';
+    String entityPath = '$userId/clients/$id';
 
     Map<String, dynamic> data = generateEntityDataCode();
 
     String entityPublishResult = await MixinDatabase.publishToDB(entityPath, data);
 
     return entityPublishResult;
+  }
+
+  @override
+  Future<String> deleteFromDb(String userId) async {
+    String entityPath = '$userId/clients/$id';
+
+    String entityDeleteResult = await MixinDatabase.deleteFromDb(entityPath);
+
+    return entityDeleteResult;
   }
 
 }

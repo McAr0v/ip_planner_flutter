@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ip_planner_flutter/database/database_info_manager.dart';
+import 'package:ip_planner_flutter/database/mixin_database.dart';
 import 'package:ip_planner_flutter/dates/choose_date_popup.dart';
 import 'package:ip_planner_flutter/design/buttons/custom_button.dart';
 import 'package:ip_planner_flutter/design/date_widgets/date_time_picker.dart';
+import 'package:ip_planner_flutter/design/input_fields/input_field_with_add.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
-import 'package:ip_planner_flutter/task/task_screens/task_screen.dart';
-
-import '../../dates/date_mixin.dart';
+import 'package:ip_planner_flutter/task/task_class.dart';
 import '../../design/app_colors.dart';
+import '../../design/buttons/button_state.dart';
+import '../../design/snackBars/custom_snack_bar.dart';
 import '../../design/text_widgets/text_custom.dart';
 import '../../design/text_widgets/text_state.dart';
 import '../task_status.dart';
 
 class TaskCreateScreen extends StatefulWidget {
-  const TaskCreateScreen({super.key});
+  final TaskCustom? task;
+  const TaskCreateScreen({super.key, this.task});
 
   @override
   TaskCreateScreenState createState() => TaskCreateScreenState();
@@ -24,6 +28,13 @@ class TaskCreateScreenState extends State<TaskCreateScreen> {
 
 
   late bool loading;
+  late bool showClient;
+  late bool showNumber;
+  late bool showInstagram;
+  late bool showAddress;
+
+  late String id;
+  late String clientId;
 
   late TextEditingController placeController;
   late TextEditingController commentController;
@@ -36,20 +47,6 @@ class TaskCreateScreenState extends State<TaskCreateScreen> {
 
   late TaskStatus status;
 
-  /*
-  String id;
-  String place;+
-  DateTime startDate;+
-  DateTime endDate;+
-  String comment;+
-  String label;+
-  String phone;+
-  String instagram;+
-  String clientId;
-  DateTime createDate;
-  TaskStatus status;
-   */
-
   @override
   void initState() {
     super.initState();
@@ -59,6 +56,12 @@ class TaskCreateScreenState extends State<TaskCreateScreen> {
   Future<void> _initializeData() async {
 
     loading = true;
+
+    showClient = false;
+    showNumber = false;
+    showInstagram = false;
+    showAddress = false;
+
 
     placeController = TextEditingController();
     commentController = TextEditingController();
@@ -71,6 +74,37 @@ class TaskCreateScreenState extends State<TaskCreateScreen> {
 
     status = TaskStatus();
 
+    if (widget.task != null) {
+
+      id = widget.task!.id;
+      clientId = widget.task!.clientId;
+
+      placeController.text = widget.task!.place;
+      commentController.text = widget.task!.comment;
+      labelController.text = widget.task!.label;
+      phoneController.text = widget.task!.phone;
+      instagramController.text = widget.task!.instagram;
+
+      startDate = widget.task!.startDate;
+      endDate = widget.task!.endDate;
+
+      if (widget.task!.place.isNotEmpty) {
+        showAddress = true;
+      }
+
+      if (widget.task!.phone.isNotEmpty) {
+        showNumber = true;
+      }
+
+      if (widget.task!.instagram.isNotEmpty) {
+        showInstagram = true;
+      }
+
+    } else {
+      id = MixinDatabase.generateKey()!;
+      clientId = '';
+    }
+
     loading = false;
   }
 
@@ -80,18 +114,13 @@ class TaskCreateScreenState extends State<TaskCreateScreen> {
         appBar: AppBar(
 
           backgroundColor: Colors.green,
-          title: const TextCustom(text: 'Создание задачи', textState: TextState.bodyBig, color: AppColors.white, weight: FontWeight.bold,),
+          title: TextCustom(text: widget.task != null ? widget.task!.label : 'Создание задачи', textState: TextState.bodyBig, color: AppColors.white, weight: FontWeight.bold,),
           leading: IconButton(
             icon: const Icon(FontAwesomeIcons.chevronLeft, size: 18,),
 
             // Переход на страницу создания города
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const TaskScreen(),
-                ),
-              );
+              goToTasksListScreen();
             },
           ),
         ),
@@ -112,8 +141,8 @@ class TaskCreateScreenState extends State<TaskCreateScreen> {
                     controller: labelController,
                     decoration: const InputDecoration(
                       fillColor: Colors.transparent,
-                      labelText: 'Название задачи',
-                      prefixIcon: Icon(Icons.email),
+                      labelText: 'Название задачи (Обязательно)',
+                      prefixIcon: Icon(Icons.task),
 
                     ),
                     keyboardType: TextInputType.text,
@@ -132,129 +161,153 @@ class TaskCreateScreenState extends State<TaskCreateScreen> {
                     decoration: const InputDecoration(
                       fillColor: Colors.transparent,
                       labelText: 'Комментарий',
-                      prefixIcon: Icon(Icons.email),
+                      prefixIcon: Icon(Icons.comment),
 
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    onEditingComplete: () {
-                      // Обработка события, когда пользователь нажимает Enter
-                      // Вы можете добавить здесь любой код, который нужно выполнить при нажатии Enter
+                  ),
+
+                  const SizedBox(height: 20,),
+
+                  DateTimePickerWidget(
+                    date: startDate,
+                    desc: "Начало задачи",
+                    addDate: () async {
+                      DateTime? result = await _showDateDialog(context, startDate);
+                      if (result != null) {
+                        setState(() {
+                          startDate = result;
+                        });
+                      }
+                    },
+                    clearDate: (){
+                      setState(() {
+                        startDate = DateTime(2100);
+                      });
                     },
                   ),
 
                   const SizedBox(height: 20,),
 
-                  TextField(
-                    style: const TextStyle(
-                      color: AppColors.white,
-                      fontSize: 16,
-                      fontFamily: 'sf_custom',
-                      fontWeight: FontWeight.normal,
-                    ),
+                  DateTimePickerWidget(
+                    date: endDate,
+                    desc: "Конец задачи",
+                    addDate: () async {
+                      DateTime? result = await _showDateDialog(context, endDate);
+                      if (result != null) {
+                        setState(() {
+                          endDate = result;
+                        });
+                      }
+                    },
+                    clearDate: (){
+                      setState(() {
+                        endDate = DateTime(2100);
+                      });
+                    },
+                  ),
+
+
+
+                  const SizedBox(height: 20,),
+
+
+                  InputFieldWithAdd(
                     controller: phoneController,
-                    decoration: const InputDecoration(
-                      fillColor: Colors.transparent,
-                      labelText: 'Контактный телефон',
-                      prefixIcon: Icon(Icons.email),
-
-                    ),
-                    keyboardType: TextInputType.phone,
+                    label: 'Телефон',
+                    headlineAdd: 'Добавить контактный телефон',
+                    textInputType: TextInputType.phone,
+                    onAddFunction: (){
+                      setState(() {
+                        showNumber = true;
+                      });
+                    },
+                    onClearFunction: (){
+                      setState(() {
+                        showNumber = false;
+                        phoneController.text = '';
+                      });
+                    },
+                    addOrClear: showNumber,
+                    icon: Icons.phone,
+                    maxLines: 1,
                   ),
 
                   const SizedBox(height: 20,),
 
-                  TextField(
-                    style: const TextStyle(
-                      color: AppColors.white,
-                      fontSize: 16,
-                      fontFamily: 'sf_custom',
-                      fontWeight: FontWeight.normal,
-                    ),
+                  InputFieldWithAdd(
                     controller: instagramController,
-                    decoration: const InputDecoration(
-                      fillColor: Colors.transparent,
-                      labelText: 'Instagram',
-                      prefixIcon: Icon(Icons.email),
-
-                    ),
-                    keyboardType: TextInputType.text,
+                    label: 'Instagram',
+                    headlineAdd: 'Добавить instagram',
+                    textInputType: TextInputType.text,
+                    onAddFunction: (){
+                      setState(() {
+                        showInstagram = true;
+                      });
+                    },
+                    onClearFunction: (){
+                      setState(() {
+                        showInstagram = false;
+                        instagramController.text = '';
+                      });
+                    },
+                    addOrClear: showInstagram,
+                    icon: FontAwesomeIcons.instagram,
+                    maxLines: 1,
                   ),
 
                   const SizedBox(height: 20,),
 
-                  TextField(
-                    style: const TextStyle(
-                      color: AppColors.white,
-                      fontSize: 16,
-                      fontFamily: 'sf_custom',
-                      fontWeight: FontWeight.normal,
-                    ),
+                  InputFieldWithAdd(
                     controller: placeController,
-                    decoration: const InputDecoration(
-                      fillColor: Colors.transparent,
-                      labelText: 'Адрес',
-                      prefixIcon: Icon(Icons.email),
+                    label: 'Адрес',
+                    headlineAdd: 'Добавить адрес',
+                    textInputType: TextInputType.streetAddress,
+                    onAddFunction: (){
+                      setState(() {
+                        showAddress = true;
+                      });
+                    },
+                    onClearFunction: (){
+                      setState(() {
+                        showAddress = false;
+                        placeController.text = '';
+                      });
+                    },
+                    addOrClear: showAddress,
+                    icon: FontAwesomeIcons.locationDot,
+                    maxLines: 1,
+                  ),
 
-                    ),
-                    keyboardType: TextInputType.streetAddress,
+                  const SizedBox(height: 40,),
+
+                  CustomButton(
+                      buttonText: widget.task != null ? 'Сохранить' : 'Добавить задачу',
+                      state: ButtonState.success,
+                      onTapMethod: (){
+                        _saveTask(
+                          label: labelController.text,
+                          place: placeController.text,
+                          instagram: instagramController.text,
+                          startDate: startDate,
+                          endDate: endDate,
+                          phone: phoneController.text,
+                          comment: commentController.text
+                        );
+
+                      }
                   ),
 
                   const SizedBox(height: 20,),
 
-                  DateTimePickerWidget(date: startDate),
-
-                  /*Card(
-                    color: AppColors.blackLight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextCustom(
-                                  text: startDate != DateTime(2100) ?
-                                  '${DateMixin.getHumanDateFromDateTime(startDate)}, в ${DateMixin.getHumanTimeFromDateTime(startDate)}'
-                                      : "Не выбрано",
-                                  textState: TextState.bodyBig,
-                                ),
-                                const TextCustom(
-                                  text: 'Начало',
-                                  textState: TextState.labelMedium,
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(height: 20,),
-
-                          IconButton(
-                              onPressed: () async {
-                                DateTime? result = await _showDateDialog(context, startDate);
-                                if (result != null) {
-                                  setState(() {
-                                    startDate = result;
-                                  });
-                                }
-                              },
-                              icon: Icon(startDate != DateTime(2100) ? FontAwesomeIcons.pencil : FontAwesomeIcons.plus, size: 18,)
-                          ),
-                          if (startDate != DateTime(2100)) IconButton(
-                              onPressed: () async {
-                                setState(() {
-                                  startDate = DateTime(2100);
-                                });
-                              },
-                              icon: const Icon(FontAwesomeIcons.x, size: 18,)
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),*/
+                  CustomButton(
+                      buttonText: 'Отменить',
+                      state: ButtonState.secondary,
+                      onTapMethod: (){
+                        goToTasksListScreen();
+                      }
+                  ),
 
                 ],
               )
@@ -280,6 +333,80 @@ class TaskCreateScreenState extends State<TaskCreateScreen> {
     } else {
       return null;
     }
+  }
+
+  Future<void> _saveTask ({
+    required String label,
+    required String place,
+    required String phone,
+    required String instagram,
+    required String comment,
+    required DateTime startDate,
+    required DateTime endDate
+  }) async {
+
+    setState(() {
+      loading = true;
+    });
+
+    if (label.isNotEmpty){
+
+      TaskCustom tempTask = TaskCustom(
+          id: id,
+          startDate: startDate,
+          endDate: endDate,
+          label: label,
+          createDate: DateTime.now(),
+          status: status,
+          place: place,
+          instagram: instagram,
+          phone: phone,
+          clientId: '',
+          comment: comment
+      );
+
+      String result = await tempTask.publishToDb(DbInfoManager.currentUser.uid);
+
+      if (result == 'ok'){
+
+        if (widget.task != null){
+          DbInfoManager.tasksList.removeWhere((element) => element.id == widget.task!.id);
+        }
+
+        DbInfoManager.tasksList.add(tempTask);
+
+        showSnackBar('Задача успешно опубликована', Colors.green, 2);
+
+        goToTasksListScreen();
+
+      } else {
+        showSnackBar('Произошла ошибка - $result', AppColors.attentionRed, 2);
+      }
+
+      setState(() {
+        loading = false;
+      });
+    } else {
+      setState(() {
+        loading = false;
+        showSnackBar('Название задачи должно быть заполнено!', AppColors.attentionRed, 2);
+
+      });
+    }
+
+
+
+
+
+  }
+
+  void goToTasksListScreen(){
+    Navigator.pushReplacementNamed(context, '/tasks');
+  }
+
+  void showSnackBar(String message, Color color, int showTime) {
+    final snackBar = customSnackBar(message: message, backgroundColor: color, showTime: showTime);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
 }

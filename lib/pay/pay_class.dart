@@ -55,4 +55,10 @@ class Pay with DateMixin implements EntityFromDb{
     return entityPublishResult;
   }
 
+  @override
+  Future<String> deleteFromDb(String userId) {
+    // TODO: implement deleteFromDb
+    throw UnimplementedError();
+  }
+
 }
