@@ -57,6 +57,20 @@ class ProfileScreenState extends State<ProfileScreen> {
 
                       }
                   ),
+
+                  const SizedBox(height: 50,),
+
+                  CustomButton(
+                      buttonText: 'Клиенты',
+                      onTapMethod: (){
+                        Navigator.pushNamed(
+                          context,
+                          '/clients'
+                        );
+
+                      }
+                  ),
+
                 ],
               ),
             )

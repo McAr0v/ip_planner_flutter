@@ -50,7 +50,7 @@ class DbInfoManager {
     for (var idFolder in snapshot.children){
 
       ClientCustom tempClient = ClientCustom.fromSnapshot(idFolder);
-      if(tempClient.phone != '') clientsList.add(tempClient);
+      if(tempClient.id != '') clientsList.add(tempClient);
 
     }
   }

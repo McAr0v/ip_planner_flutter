@@ -8,7 +8,6 @@ class ClientCustom with MixinDatabase implements EntityFromDb{
 
   String id;
   String name;
-  String lastName;
   String phone;
   String instagram;
   String telegram;
@@ -20,7 +19,6 @@ class ClientCustom with MixinDatabase implements EntityFromDb{
   ClientCustom({
     required this.id,
     required this.name,
-    this.lastName = '',
     required this.phone,
     this.instagram = '',
     this.telegram = '',
@@ -50,7 +48,6 @@ class ClientCustom with MixinDatabase implements EntityFromDb{
     return ClientCustom(
         id: snapshot.child('id').value.toString(),
         name: snapshot.child('name').value.toString(),
-        lastName: snapshot.child('lastName').value.toString(),
         phone: snapshot.child('phone').value.toString(),
         instagram: snapshot.child('instagram').value.toString(),
         telegram: snapshot.child('telegram').value.toString(),
@@ -67,7 +64,6 @@ class ClientCustom with MixinDatabase implements EntityFromDb{
     return <String, dynamic> {
       'id': id,
       'name': name,
-      'lastName': lastName,
       'phone': phone,
       'instagram': instagram,
       'telegram': telegram,

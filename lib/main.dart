@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ip_planner_flutter/auth/auth_manager.dart';
+import 'package:ip_planner_flutter/clients/clients_screens/clients_list_screen.dart';
 import 'package:ip_planner_flutter/database/database_info_manager.dart';
 import 'package:ip_planner_flutter/design/dark_theme.dart';
 import 'package:ip_planner_flutter/navigation/custom_navigation.dart';
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
         '/reg': (context) => const RegistrationScreen(),
         '/logIn': (context) => const LoginScreen(),
         '/privacy_policy': (context) => const PrivacyPolicyPage(),
+        '/clients': (context) => const ClientListScreen(),
 
         // Другие маршруты вашего приложения
       },

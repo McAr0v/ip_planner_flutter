@@ -35,7 +35,6 @@ class ClientCreateScreenState extends State<ClientCreateScreen> {
   late bool showWhatsapp;
 
   late TextEditingController nameController;
-  late TextEditingController lastNameController;
   late TextEditingController phoneController;
   late TextEditingController instagramController;
   late TextEditingController telegramController;
@@ -60,9 +59,9 @@ class ClientCreateScreenState extends State<ClientCreateScreen> {
     showNumber = false;
     showInstagram = false;
     showWhatsapp = false;
+    showTelegram = false;
 
     nameController = TextEditingController();
-    lastNameController = TextEditingController();
     phoneController = TextEditingController();
     instagramController = TextEditingController();
     telegramController = TextEditingController();
@@ -80,7 +79,6 @@ class ClientCreateScreenState extends State<ClientCreateScreen> {
       id = widget.client!.id;
 
       nameController.text = widget.client!.name;
-      lastNameController.text = widget.client!.lastName;
       phoneController.text = widget.client!.phone;
       instagramController.text = widget.client!.instagram;
       telegramController.text = widget.client!.telegram;
@@ -116,19 +114,7 @@ class ClientCreateScreenState extends State<ClientCreateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-
-          backgroundColor: Colors.green,
-          title: TextCustom(text: widget.client != null ? widget.client!.name : 'Создание клиента', textState: TextState.bodyBig, color: AppColors.white, weight: FontWeight.bold,),
-          leading: IconButton(
-            icon: const Icon(FontAwesomeIcons.chevronLeft, size: 18,),
-
-            // Переход на страницу создания города
-            onPressed: () {
-              goToClientsListScreen();
-            },
-          ),
-        ),
+        backgroundColor: AppColors.black.withOpacity(0.6),
         body: Stack(
           children: [
             if (loading) const LoadingScreen()
@@ -148,27 +134,6 @@ class ClientCreateScreenState extends State<ClientCreateScreen> {
                         fillColor: Colors.transparent,
                         labelText: 'Имя (Обязательно)',
                         prefixIcon: Icon(Icons.task),
-
-                      ),
-                      keyboardType: TextInputType.text,
-                    ),
-
-                    const SizedBox(height: 20,),
-
-
-
-                    TextField(
-                      style: const TextStyle(
-                        color: AppColors.white,
-                        fontSize: 16,
-                        fontFamily: 'sf_custom',
-                        fontWeight: FontWeight.normal,
-                      ),
-                      controller: lastNameController,
-                      decoration: const InputDecoration(
-                        fillColor: Colors.transparent,
-                        labelText: 'Фамилия',
-                        prefixIcon: Icon(Icons.comment),
 
                       ),
                       keyboardType: TextInputType.text,
@@ -295,7 +260,6 @@ class ClientCreateScreenState extends State<ClientCreateScreen> {
                           _saveClient(
                               id: id,
                               name: nameController.text,
-                              lastName: lastNameController.text,
                               phone: phoneController.text,
                               instagram: instagramController.text,
                               telegram: telegramController.text,
@@ -347,7 +311,6 @@ class ClientCreateScreenState extends State<ClientCreateScreen> {
   Future<void> _saveClient ({
     required String id,
     required String name,
-    required String lastName,
     required String phone,
     required String instagram,
     required String telegram,
@@ -372,7 +335,6 @@ class ClientCreateScreenState extends State<ClientCreateScreen> {
           birthDay: birthday,
           gender: gender,
           whatsapp: whatsapp,
-          lastName: lastName,
           instagram: instagram,
           telegram: telegram
       );
@@ -413,7 +375,7 @@ class ClientCreateScreenState extends State<ClientCreateScreen> {
   }
 
   void goToClientsListScreen(){
-    Navigator.pushReplacementNamed(context, '/tasks');
+    Navigator.pushReplacementNamed(context, '/clients');
   }
 
   void showSnackBar(String message, Color color, int showTime) {
