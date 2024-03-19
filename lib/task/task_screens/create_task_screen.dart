@@ -393,11 +393,6 @@ class TaskCreateScreenState extends State<TaskCreateScreen> {
 
       });
     }
-
-
-
-
-
   }
 
   void goToTasksListScreen(){

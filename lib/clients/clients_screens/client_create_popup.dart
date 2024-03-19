@@ -30,10 +30,6 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
 
   late bool loading;
   late bool saving;
-  late bool showNumber;
-  late bool showInstagram;
-  late bool showTelegram;
-  late bool showWhatsapp;
   late bool edit;
 
   late TextEditingController nameController;
@@ -66,11 +62,6 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
 
     loading = true;
     saving = false;
-
-    showNumber = false;
-    showInstagram = false;
-    showWhatsapp = false;
-    showTelegram = false;
 
     nameController = TextEditingController();
     phoneController = TextEditingController();
@@ -106,21 +97,6 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
       birthday = widget.client!.birthDay;
 
       gender = widget.client!.gender;
-
-      if (widget.client!.phone.isNotEmpty){
-        showNumber = true;
-      }
-      if (widget.client!.instagram.isNotEmpty){
-        showInstagram = true;
-      }
-      if (widget.client!.telegram.isNotEmpty){
-        showTelegram = true;
-      }
-
-
-      if (widget.client!.whatsapp.isNotEmpty){
-        showWhatsapp = true;
-      }
 
 
     } else {

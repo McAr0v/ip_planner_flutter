@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ip_planner_flutter/design/social_widgets/social_widget.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
 import 'package:ip_planner_flutter/task/task_class.dart';
 import '../../dates/date_mixin.dart';
 import '../../design/app_colors.dart';
-import '../../design/dialogs/dialog.dart';
 import '../../design/text_widgets/text_custom.dart';
 import '../../links/open_url_class.dart';
 import '../../links/url_path_enum.dart';
@@ -61,20 +61,7 @@ class TaskWidget extends StatelessWidget {
 
               if (task.phone.isNotEmpty || task.instagram.isNotEmpty) const SizedBox(height: 20,),
 
-              if (task.phone.isNotEmpty || task.instagram.isNotEmpty) Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (task.phone.isNotEmpty) GestureDetector(
-                    child: const Icon(FontAwesomeIcons.phone, color: AppColors.greyLight, size: 18,),
-                    onTap: () => OpenUrlClass.openUrl(task.phone, UrlPathEnum.phone),
-                  ),
-                  if (task.phone.isNotEmpty) const SizedBox(width: 30,),
-                  if (task.instagram.isNotEmpty) GestureDetector(
-                    child: const Icon(FontAwesomeIcons.instagram, color: AppColors.greyLight,),
-                    onTap: () => OpenUrlClass.openUrl(task.instagram, UrlPathEnum.instagram),
-                  ),
-                ],
-              ),
+              SocialWidget(phone: task.phone, instagram: task.instagram,),
 
               if (task.startDate != DateTime(2100) || task.endDate != DateTime(2100)) const SizedBox(height: 20,),
               if (task.startDate != DateTime(2100) || task.endDate != DateTime(2100)) Row(

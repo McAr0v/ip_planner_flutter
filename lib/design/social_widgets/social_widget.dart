@@ -36,7 +36,7 @@ class SocialWidget extends StatelessWidget {
           ),
         ),
 
-        if (instagram.isNotEmpty) const SizedBox(width: 10,),
+        if (phone.isNotEmpty) const SizedBox(width: 10,),
 
         if (instagram.isNotEmpty) IconButton(
           onPressed: () => OpenUrlClass.openUrl(instagram, UrlPathEnum.instagram),
@@ -50,7 +50,7 @@ class SocialWidget extends StatelessWidget {
           ),
         ),
 
-        if (telegram.isNotEmpty) const SizedBox(width: 10,),
+        if (instagram.isNotEmpty) const SizedBox(width: 10,),
 
         if (telegram.isNotEmpty) IconButton(
           onPressed: () => OpenUrlClass.openUrl(telegram, UrlPathEnum.telegram),
@@ -64,7 +64,7 @@ class SocialWidget extends StatelessWidget {
           ),
         ),
 
-        if (whatsapp.isNotEmpty) const SizedBox(width: 10,),
+        if (telegram.isNotEmpty) const SizedBox(width: 10,),
 
         if (whatsapp.isNotEmpty) IconButton(
           onPressed: () => OpenUrlClass.openUrl(whatsapp, UrlPathEnum.whatsapp),

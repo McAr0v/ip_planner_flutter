@@ -5,6 +5,7 @@ import 'package:ip_planner_flutter/design/app_colors.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
+import 'package:ip_planner_flutter/task/task_screens/create_task_popup.dart';
 import 'package:ip_planner_flutter/task/task_screens/create_task_screen.dart';
 import 'package:ip_planner_flutter/task/task_widgets/task_widget.dart';
 
@@ -77,12 +78,7 @@ class TaskScreenState extends State<TaskScreen> {
 
             // Переход на страницу создания города
             onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const TaskCreateScreen(),
-                ),
-              );
+              _showCreateTaskDialog(context: context);
             },
           ),
 
@@ -112,6 +108,26 @@ class TaskScreenState extends State<TaskScreen> {
         ],
       )
     );
+  }
+
+  Future<void> _showCreateTaskDialog({required BuildContext context, TaskCustom? task}) async {
+    final results = await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return TaskCreatePopup(task: task,); // Вызываем кастомный виджет для pop-up
+      },
+    );
+
+    if (results != null) {
+
+      setState(() {
+        loading = true;
+        //list = DbInfoManager.clientsList;
+        //sortList(sort);
+        loading = false;
+      });
+    }
   }
 
   Future<void> deleteTask(TaskCustom task) async {
