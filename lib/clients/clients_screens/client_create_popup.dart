@@ -265,7 +265,7 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
                               textInputType: TextInputType.datetime,
                               active: false,
                             needButton: widget.client == null || edit ? true : false,
-                            onChange: (){
+                            onButtonClick: (){
                               _selectDate(context, birthday != DateTime(2100) ? birthday : DateTime.now());
                             },
                             iconForButton: FontAwesomeIcons.pencil,

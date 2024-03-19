@@ -11,7 +11,8 @@ class InputField extends StatelessWidget {
   final bool active;
   final bool needButton;
   final bool activateButton;
-  final VoidCallback? onChange;
+  final VoidCallback? onButtonClick;
+  final ValueChanged<String>? onChanged;
 
   const InputField({
     super.key,
@@ -24,7 +25,8 @@ class InputField extends StatelessWidget {
     this.maxLines = 1,
     this.needButton = false,
     this.activateButton = false,
-    this.onChange
+    this.onButtonClick,
+    this.onChanged
   });
 
   @override
@@ -48,13 +50,14 @@ class InputField extends StatelessWidget {
             keyboardType: textInputType,
             enabled: active,
             maxLines: maxLines,
+            onChanged: onChanged,
           ),
         ),
 
         if (activateButton && needButton) const SizedBox(width: 10.0),
 
         if (activateButton && needButton) GestureDetector(
-          onTap: onChange,
+          onTap: onButtonClick,
           child: Card(
             color: AppColors.yellowLight,
             child: Padding(

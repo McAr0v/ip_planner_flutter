@@ -5,6 +5,7 @@ import 'package:ip_planner_flutter/clients/client_widgets/clients_widget.dart';
 import 'package:ip_planner_flutter/clients/clients_screens/client_create_popup.dart';
 import 'package:ip_planner_flutter/database/database_info_manager.dart';
 import 'package:ip_planner_flutter/design/app_colors.dart';
+import 'package:ip_planner_flutter/design/input_fields/input_field.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
@@ -24,6 +25,7 @@ class ClientListScreenState extends State<ClientListScreen> {
   bool loading = true;
   bool deleting = false;
   bool showSearchBar = false;
+  bool sort = false;
 
   TextEditingController searchController = TextEditingController();
 
@@ -43,6 +45,8 @@ class ClientListScreenState extends State<ClientListScreen> {
 
     list = DbInfoManager.clientsList;
 
+    sortList(sort);
+
     setState(() {
       loading = false;
     });
@@ -59,13 +63,30 @@ class ClientListScreenState extends State<ClientListScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextCustom(text: 'Мои клиенты', textState: TextState.headlineSmall, color: AppColors.white,),
+              TextCustom(text: 'Клиенты', textState: TextState.headlineSmall, color: AppColors.white,),
             ],
           ),
           actions: [
 
             IconButton(
-              icon: const Icon(FontAwesomeIcons.searchengin, size: 18,),
+
+              icon: Icon(
+                !sort ? FontAwesomeIcons.sortAlphaAsc : FontAwesomeIcons.sortAlphaDesc,
+                color: !sort ? AppColors.white : AppColors.yellowLight,
+                size: 18,
+              ),
+
+              // Переход на страницу создания города
+              onPressed: () {
+                setState(() {
+                  sort = !sort;
+                  sortList(sort);
+                });
+              },
+            ),
+
+            IconButton(
+              icon: Icon(Icons.search, color: showSearchBar ? AppColors.yellowLight : AppColors.white,),
 
               onPressed: () {
                   setState(() {
@@ -75,6 +96,7 @@ class ClientListScreenState extends State<ClientListScreen> {
                     if (showSearchBar == false) {
                       searchController.text = '';
                       updateClientsListInSearch(searchController.text);
+
                     }
 
                   });
@@ -91,44 +113,33 @@ class ClientListScreenState extends State<ClientListScreen> {
               },
             ),
 
-
-
           ],
         ),
         body: Column(
           children: [
 
-            if (showSearchBar) Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: searchController,
-                    decoration: const InputDecoration(
-                      hintText: 'Поиск клиента по имени или телефону...',
-                    ),
-                    onChanged: (value) {
-                      updateClientsListInSearch(value);
-                    },
-                  ),
-                ),
-
-                GestureDetector(
-                  onTap: (){
-                    setState(() {
-                      searchController.text = '';
-                      updateClientsListInSearch(searchController.text);
-                    });
-                  },
-                  child: const Card(
-                    color: AppColors.yellowLight,
-                    child: Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Icon(FontAwesomeIcons.x, size: 18, color: AppColors.black,),
-                    ),
-                  ),
-                ),
-
-              ],
+            if (showSearchBar) Container(
+              color: AppColors.blackLight,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: InputField(
+                controller: searchController,
+                label: 'Поиск по имени или телефону...',
+                textInputType: TextInputType.text,
+                active: true,
+                activateButton: true,
+                needButton: true,
+                onButtonClick: (){
+                  setState(() {
+                    searchController.text = '';
+                    updateClientsListInSearch(searchController.text);
+                  });
+                },
+                onChanged: (value) {
+                  updateClientsListInSearch(value);
+                },
+                icon: Icons.search,
+                iconForButton: FontAwesomeIcons.x,
+              ),
             ),
 
             //TextCustom(text: list.length.toString()),
@@ -152,8 +163,28 @@ class ClientListScreenState extends State<ClientListScreen> {
                     }
                 ),
               )
-              else const Center(
-                  child: TextCustom(text: 'Клиентов еще нет',),
+              else Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+
+                      const TextCustom(text: 'Пусто( Создать клиента?',),
+                      const SizedBox(height: 20,),
+                      IconButton(
+                        icon: const Icon(Icons.add, color: AppColors.black,),
+                        onPressed: () {
+                          _showCreateClientDialog(context: context);
+                        },
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                  (Set<MaterialState> states) {
+                                return Colors.green;
+                              },
+                            )
+                        ),
+                      ),
+                    ],
+                  )
                 )
           ],
         )
@@ -205,6 +236,7 @@ class ClientListScreenState extends State<ClientListScreen> {
       setState(() {
         loading = true;
         list = DbInfoManager.clientsList;
+        sortList(sort);
         loading = false;
       });
     }
@@ -223,6 +255,11 @@ class ClientListScreenState extends State<ClientListScreen> {
             client.phone.contains(query)) // Проверяем и имя, и номер телефона
           .toList();
     });
+  }
+
+  void sortList(bool sort){
+    if (!sort) list.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    if (sort) list.sort((a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
   }
 
 }

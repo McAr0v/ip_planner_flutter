@@ -16,4 +16,11 @@ class AppColors {
   static const Color white = Color(0xFFFFFFFF);
   static const Color yellowDark = Color(0xFFE8BD70);
   static const Color yellowLight = Color(0xFFEDD185);
+
+  static const Color call = Color(0xFF007BFF);
+  static const Color instagram = Color(0xFFBC2A8D);
+  static const Color telegram = Color(0xFF0088CC);
+  static const Color whatsapp = Color(0xFF25D366);
+
+
 }
