@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ip_planner_flutter/database/database_info_manager.dart';
 import 'package:ip_planner_flutter/dates/date_mixin.dart';
-import 'package:ip_planner_flutter/design/buttons/button_state.dart';
+import 'package:ip_planner_flutter/design/input_fields/input_field.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
-
 import '../../database/mixin_database.dart';
 import '../../design/app_colors.dart';
-import '../../design/buttons/custom_button.dart';
-import '../../design/date_widgets/date_time_picker.dart';
-import '../../design/input_fields/input_field_with_add.dart';
 import '../../design/snackBars/custom_snack_bar.dart';
 import '../client_class.dart';
 import '../gender_class.dart';
@@ -20,8 +16,9 @@ import '../gender_class.dart';
 class ClientCreatePopup extends StatefulWidget {
 
   final ClientCustom? client;
+  final bool? isEdit;
 
-  const ClientCreatePopup({super.key, required this.client});
+  const ClientCreatePopup({super.key, required this.client, this.isEdit});
 
   @override
   ClientCreatePopupState createState() => ClientCreatePopupState();
@@ -37,6 +34,7 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
   late bool showInstagram;
   late bool showTelegram;
   late bool showWhatsapp;
+  late bool edit;
 
   late TextEditingController nameController;
   late TextEditingController phoneController;
@@ -59,6 +57,12 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
   }
 
   Future<void> _initializeData() async {
+
+    if (widget.isEdit != null) {
+      edit = widget.isEdit!;
+    } else {
+      edit = false;
+    }
 
     loading = true;
     saving = false;
@@ -134,290 +138,223 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.black.withOpacity(0.6),
-      body: Center(
-        child: Stack(
-          children: [
-            if (saving) const Expanded(
-                child: LoadingScreen()
-            ),
-
-            if (!saving) Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.9,
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: AppColors.blackLight,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // ---- Заголовок фильтра и иконка ---
-
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
+        children: [
+          if (loading) const LoadingScreen()
+          else if (saving) const LoadingScreen(loadingText: 'Идет сохранение',)
+          else Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  color: AppColors.blackLight,
+                  borderRadius: BorderRadius.circular(15), // настройте радиус скругления углов для контейнера
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Expanded(
-                        child: Padding(
-                            padding: EdgeInsets.all(8.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
                             child: Column (
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
 
-                                TextCustom(text: 'Создание клиента', textState: TextState.headlineSmall,),
+                                if (!edit) TextCustom(text: widget.client != null ? widget.client!.name : 'Создание клиента', textState: TextState.headlineSmall,),
 
-                                SizedBox(height: 10,),
+                                if (edit) const TextCustom(text: 'Редактирование', textState: TextState.headlineSmall,),
 
-                                TextCustom(text: 'Введи данные о клиенте', textState: TextState.labelMedium,),
+                                const SizedBox(height: 10,),
+
+                                if (widget.client == null) const TextCustom(text: 'Введите данные о клиенте', textState: TextState.labelMedium,),
+                                if (widget.client != null && !edit) const TextCustom(text: 'Данные клиента', textState: TextState.labelMedium,),
+                                if (widget.client != null && edit) const TextCustom(text: 'Отредактируйте данные клиента', textState: TextState.labelMedium,),
 
                               ],
                             )
-                        )
+                        ),
+
+                        // --- Иконка ----
+
+                        if (widget.client != null) IconButton(
+                          icon: const Icon(FontAwesomeIcons.pencil, size: 18,),
+                          onPressed: () {
+                            setState(() {
+                              edit = true;
+                            });
+                          },
+                        ),
+
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
                     ),
 
-                    // --- Иконка ----
+                    const SizedBox(height: 20.0),
 
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
+                    // ---- Содержимое фильтра -----
 
-                const SizedBox(height: 8.0),
-
-                // ---- Содержимое фильтра -----
-
-
-
-                 Expanded(
-                  child: SingleChildScrollView (
-                    child: Container (
-                      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: AppColors.blackLight,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
+                    SingleChildScrollView (
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextField(
-                            style: const TextStyle(
-                              color: AppColors.white,
-                              fontSize: 16,
-                              fontFamily: 'sf_custom',
-                              fontWeight: FontWeight.normal,
-                            ),
-                            controller: nameController,
-                            decoration: const InputDecoration(
-                              fillColor: Colors.transparent,
-                              labelText: 'Имя (Обязательно)',
-                              prefixIcon: Icon(Icons.person),
-                            ),
-                            keyboardType: TextInputType.text,
+
+                          InputField(
+                              controller: nameController,
+                              label: widget.client == null || edit  ? 'Имя (Обязательно)' : 'Имя',
+                              textInputType: TextInputType.text,
+                              active: widget.client == null || edit ? true : false,
+                            icon: Icons.person,
                           ),
 
                           const SizedBox(height: 20,),
 
-                          TextField(
-                            style: const TextStyle(
-                              color: AppColors.white,
-                              fontSize: 16,
-                              fontFamily: 'sf_custom',
-                              fontWeight: FontWeight.normal,
-                            ),
+                          InputField(
                             controller: phoneController,
-                            decoration: const InputDecoration(
-                              fillColor: Colors.transparent,
-                              labelText: 'Телефон',
-                              prefixIcon: Icon(Icons.phone),
-
-                            ),
-                            keyboardType: TextInputType.phone,
+                            label: 'Телефон',
+                            textInputType: TextInputType.phone,
+                            active: widget.client == null || edit ? true : false,
+                            icon: Icons.phone,
                           ),
 
                           const SizedBox(height: 20,),
 
-                          TextField(
-                            style: const TextStyle(
-                              color: AppColors.white,
-                              fontSize: 16,
-                              fontFamily: 'sf_custom',
-                              fontWeight: FontWeight.normal,
-                            ),
+                          InputField(
                             controller: whatsappController,
-                            decoration: const InputDecoration(
-                              fillColor: Colors.transparent,
-                              labelText: 'Whatsapp',
-                              prefixIcon: Icon(FontAwesomeIcons.whatsapp),
-
-                            ),
-                            keyboardType: TextInputType.text,
+                            label: 'Whatsapp',
+                            textInputType: TextInputType.phone,
+                            active: widget.client == null || edit ? true : false,
+                            icon: FontAwesomeIcons.whatsapp,
                           ),
 
                           const SizedBox(height: 20,),
 
-                          TextField(
-                            style: const TextStyle(
-                              color: AppColors.white,
-                              fontSize: 16,
-                              fontFamily: 'sf_custom',
-                              fontWeight: FontWeight.normal,
-                            ),
+                          InputField(
                             controller: instagramController,
-                            decoration: const InputDecoration(
-                              fillColor: Colors.transparent,
-                              labelText: 'Instagram',
-                              prefixIcon: Icon(FontAwesomeIcons.instagram),
-
-                            ),
-                            keyboardType: TextInputType.text,
+                            label: 'Instagram',
+                            textInputType: TextInputType.text,
+                            active: widget.client == null || edit ? true : false,
+                            icon: FontAwesomeIcons.instagram,
                           ),
 
                           const SizedBox(height: 20,),
 
-                          TextField(
-                            style: const TextStyle(
-                              color: AppColors.white,
-                              fontSize: 16,
-                              fontFamily: 'sf_custom',
-                              fontWeight: FontWeight.normal,
-                            ),
+                          InputField(
                             controller: telegramController,
-                            decoration: const InputDecoration(
-                              fillColor: Colors.transparent,
-                              labelText: 'Telegram',
-                              prefixIcon: Icon(FontAwesomeIcons.telegram),
-
-                            ),
-                            keyboardType: TextInputType.text,
+                            label: 'Telegram',
+                            textInputType: TextInputType.text,
+                            active: widget.client == null || edit ? true : false,
+                            icon: FontAwesomeIcons.telegram,
                           ),
 
                           const SizedBox(height: 20,),
 
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  style: const TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: 16,
-                                    fontFamily: 'sf_custom',
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  controller: dateController,
-                                  decoration: const InputDecoration(
-                                    fillColor: Colors.transparent,
-                                    labelText: 'День рождения',
-                                    prefixIcon: Icon(FontAwesomeIcons.cakeCandles),
+                          InputField(
+                              controller: dateController,
+                              label: 'День рождения',
+                              textInputType: TextInputType.datetime,
+                              active: false,
+                            needButton: widget.client == null || edit ? true : false,
+                            onChange: (){
+                              _selectDate(context, birthday != DateTime(2100) ? birthday : DateTime.now());
+                            },
+                            iconForButton: FontAwesomeIcons.pencil,
+                            icon: FontAwesomeIcons.cakeCandles,
+                            activateButton: widget.client == null || edit ? true : false,
 
-                                  ),
-                                  keyboardType: TextInputType.datetime,
-                                ),
-                              ),
-                              const SizedBox(width: 10.0),
-
-                              GestureDetector(
-                                onTap: (){
-                                  _selectDate(context, birthday != DateTime(2100) ? birthday : DateTime.now());
-                                },
-                                child: Card(
-                                  color: AppColors.yellowLight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Icon(FontAwesomeIcons.pencil, size: 18, color: AppColors.black,),
-                                  ),
-                                ),
-                              ),
-
-                            ],
                           ),
 
                         ],
                       ),
                     ),
-                  ),
-                ),
 
-                const SizedBox(height: 20.0),
+                    if (widget.client == null || edit) const SizedBox(height: 30.0),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
+                    if (widget.client == null || edit) Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
 
-                    GestureDetector(
-                      child: const TextCustom(text: 'Отменить', color: AppColors.attentionRed,),
-                      onTap: (){Navigator.of(context).pop();},
+                        GestureDetector(
+                          child: const TextCustom(text: 'Отменить', color: AppColors.attentionRed,),
+                          onTap: (){Navigator.of(context).pop();},
+                        ),
+
+                        const SizedBox(width: 30.0),
+
+                        GestureDetector(
+                          child: const TextCustom(text: 'Сохранить', color: Colors.green,),
+                          onTap: () async {
+
+                            setState(() {
+                              saving = true;
+                            });
+
+                            if (nameController.text.isNotEmpty){
+
+                              ClientCustom tempClient = ClientCustom(
+                                  id: id,
+                                  name: nameController.text,
+                                  phone: phoneController.text,
+                                  createDate: createDate,
+                                  birthDay: birthday,
+                                  gender: gender,
+                                  whatsapp: whatsappController.text,
+                                  instagram: instagramController.text,
+                                  telegram: telegramController.text
+
+                              );
+
+                              String result = await tempClient.publishToDb(DbInfoManager.currentUser.uid);
+
+                              if (result == 'ok'){
+
+                                if (widget.client != null) {
+                                  DbInfoManager.clientsList.removeWhere((element) => element.id == tempClient.id);
+                                }
+
+                                DbInfoManager.clientsList.add(tempClient);
+
+                                showSnackBar('Клиент успешно опубликован!', Colors.green, 2);
+
+                                returnWithResult(tempClient);
+
+                              } else {
+
+                                showSnackBar('Произошла ошибка - $result', AppColors.attentionRed, 2);
+
+                              }
+                            } else {
+                              showSnackBar('Имя должно быть обязательно заполнено!', AppColors.attentionRed, 2);
+                            }
+
+                            setState(() {
+                              saving = false;
+                            });
+
+                          },
+                        ),
+                      ],
                     ),
 
-                    const SizedBox(width: 30.0),
-
-                    GestureDetector(
-                      child: const TextCustom(text: 'Сохранить', color: Colors.green,),
-                      onTap: () async {
-
-                        setState(() {
-                          saving = true;
-                        });
-
-                        ClientCustom tempClient = ClientCustom(
-                            id: id,
-                            name: nameController.text,
-                            phone: phoneController.text,
-                            createDate: createDate,
-                            birthDay: birthday,
-                            gender: gender,
-                            whatsapp: whatsappController.text,
-                            instagram: instagramController.text,
-                            telegram: telegramController.text
-
-                        );
-
-                        String result = await tempClient.publishToDb(DbInfoManager.currentUser.uid);
-
-                        if (result == 'ok'){
-
-                          if (widget.client != null) {
-                            DbInfoManager.clientsList.removeWhere((element) => element.id == tempClient.id);
-                          }
-
-                          DbInfoManager.clientsList.add(tempClient);
-
-                          showSnackBar('Клиент успешно опубликован!', Colors.green, 2);
-
-                          returnWithResult(tempClient);
-
-                        } else {
-
-                          showSnackBar('Произошла ошибка - $result', AppColors.attentionRed, 2);
-
-                        }
-
-                        setState(() {
-                          saving = false;
-                        });
-
-                      },
-                    ),
-
-                    const SizedBox(width: 10.0),
+                    if (widget.client == null || edit) const SizedBox(height: 10.0),
 
                   ],
                 ),
-
-                const SizedBox(height: 10.0),
-
-              ],
-            ),
-          ),]
-        ),
-      ),
+              ),
+            ],
+          )
+        ],
+      )
     );
   }
 

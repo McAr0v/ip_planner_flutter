@@ -365,7 +365,7 @@ class CustomTheme {
 
             disabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: AppColors.greyLight, // Цвет границы
+                color: AppColors.graphite, // Цвет границы
                 width: 2.0, // Ширина границы
               ),
               borderRadius: BorderRadius.all(Radius.circular(15.0)), // Радиус скругления углов
