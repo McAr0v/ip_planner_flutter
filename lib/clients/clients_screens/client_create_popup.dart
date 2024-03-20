@@ -75,7 +75,6 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
 
     gender = Gender();
 
-    dateController.text = 'День рождения не выбран';
 
     if (widget.client != null) {
 
@@ -191,6 +190,19 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
                               textInputType: TextInputType.text,
                               active: widget.client == null || edit ? true : false,
                             icon: Icons.person,
+                            needButton: (widget.client == null || edit) && nameController.text != '' && true,
+                            activateButton: nameController.text != '',
+                            onChanged: (value) {
+                              setState(() {
+                                nameController.text = value;
+                              });
+                            },
+                            onButtonClick: (){
+                              setState(() {
+                                nameController.text = '';
+                              });
+                            },
+                            iconForButton: FontAwesomeIcons.x,
                           ),
 
                           const SizedBox(height: 20,),
@@ -201,6 +213,19 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
                             textInputType: TextInputType.phone,
                             active: widget.client == null || edit ? true : false,
                             icon: Icons.phone,
+                            needButton: (widget.client == null || edit) && phoneController.text != '' && true,
+                            activateButton: phoneController.text != '',
+                            onChanged: (value) {
+                              setState(() {
+                                phoneController.text = value;
+                              });
+                            },
+                            onButtonClick: (){
+                              setState(() {
+                                phoneController.text = '';
+                              });
+                            },
+                            iconForButton: FontAwesomeIcons.x,
                           ),
 
                           const SizedBox(height: 20,),
@@ -211,6 +236,19 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
                             textInputType: TextInputType.phone,
                             active: widget.client == null || edit ? true : false,
                             icon: FontAwesomeIcons.whatsapp,
+                            needButton: (widget.client == null || edit) && whatsappController.text != '' && true,
+                            activateButton: whatsappController.text != '',
+                            onChanged: (value) {
+                              setState(() {
+                                whatsappController.text = value;
+                              });
+                            },
+                            onButtonClick: (){
+                              setState(() {
+                                whatsappController.text = '';
+                              });
+                            },
+                            iconForButton: FontAwesomeIcons.x,
                           ),
 
                           const SizedBox(height: 20,),
@@ -221,6 +259,19 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
                             textInputType: TextInputType.text,
                             active: widget.client == null || edit ? true : false,
                             icon: FontAwesomeIcons.instagram,
+                            needButton: (widget.client == null || edit) && instagramController.text != '' && true,
+                            activateButton: instagramController.text != '',
+                            onChanged: (value) {
+                              setState(() {
+                                instagramController.text = value;
+                              });
+                            },
+                            onButtonClick: (){
+                              setState(() {
+                                instagramController.text = '';
+                              });
+                            },
+                            iconForButton: FontAwesomeIcons.x,
                           ),
 
                           const SizedBox(height: 20,),
@@ -231,21 +282,40 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
                             textInputType: TextInputType.text,
                             active: widget.client == null || edit ? true : false,
                             icon: FontAwesomeIcons.telegram,
+                            needButton: (widget.client == null || edit) && telegramController.text != '' && true,
+                            activateButton: telegramController.text != '',
+                            onChanged: (value) {
+                              setState(() {
+                                telegramController.text = value;
+                              });
+                            },
+                            onButtonClick: (){
+                              setState(() {
+                                telegramController.text = '';
+                              });
+                            },
+                            iconForButton: FontAwesomeIcons.x,
                           ),
 
                           const SizedBox(height: 20,),
 
                           InputField(
-                              controller: dateController,
-                              label: 'День рождения',
-                              textInputType: TextInputType.datetime,
-                              active: false,
-                            needButton: widget.client == null || edit ? true : false,
-                            onButtonClick: (){
+                            controller: dateController,
+                            label: 'День рождения',
+                            textInputType: TextInputType.datetime,
+                            active: widget.client == null || edit ? true : false,
+                            needButton: (widget.client == null || edit) && birthday != DateTime(2100) ? true : false,
+                            onFieldClick: () async {
                               _selectDate(context, birthday != DateTime(2100) ? birthday : DateTime.now());
                             },
-                            iconForButton: FontAwesomeIcons.pencil,
-                            icon: FontAwesomeIcons.cakeCandles,
+                            onButtonClick: (){
+                              setState(() {
+                                birthday = DateTime(2100);
+                                dateController.text = '';
+                              });
+                            },
+                            iconForButton: FontAwesomeIcons.x,
+                            icon: FontAwesomeIcons.calendarDays,
                             activateButton: widget.client == null || edit ? true : false,
 
                           ),

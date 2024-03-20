@@ -13,12 +13,14 @@ import '../task_screens/create_task_screen.dart';
 class TaskWidget extends StatelessWidget {
   final TaskCustom task; // Передаваемая переменная
   final VoidCallback onDelete; // Передаваемая переменная
+  final VoidCallback onTap; // Передаваемая переменная
 
-  const TaskWidget({super.key, required this.task, required this.onDelete}); // required - значит, что обязательно
+  const TaskWidget({super.key, required this.task, required this.onDelete, required this.onTap}); // required - значит, что обязательно
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: onTap,
       child: Card(
         surfaceTintColor: Colors.transparent,
         margin: const EdgeInsets.symmetric(vertical: 5),
@@ -28,22 +30,16 @@ class TaskWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                //mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(child: TextCustom(text: task.label, textState: TextState.bodyBig, weight: FontWeight.bold,)),
                   const SizedBox(width: 20,),
-                  GestureDetector(
+                  /*GestureDetector(
                     child: const Icon(FontAwesomeIcons.pencil, size: 16, color: AppColors.yellowLight,),
-                    onTap: (){
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TaskCreateScreen(task: task,),
-                        ),
-                      );
-                    },
+                    onTap: onTap
                   ),
-                  const SizedBox(width: 30,),
+                  const SizedBox(width: 30,),*/
                   GestureDetector(
                     child: const Icon(FontAwesomeIcons.x, size: 16, color: AppColors.attentionRed,),
                     onTap: (){

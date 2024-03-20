@@ -43,167 +43,170 @@ class ChooseDatePopupState extends State<ChooseDatePopup> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.black.withOpacity(0.6),
-      body: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.5,
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: AppColors.blackLight,
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Stack(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // ---- Заголовок фильтра и иконка ---
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Expanded(
-                      child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column (
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-
-                              TextCustom(text: 'Дата и время', textState: TextState.headlineSmall,),
-
-                              SizedBox(height: 10,),
-
-                              TextCustom(text: 'Выбери дату и время', textState: TextState.labelMedium,),
-
-                            ],
-                          )
-                      )
-                  ),
-
-                  // --- Иконка ----
-
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 8.0),
-
-              // ---- Содержимое фильтра -----
-
-              Expanded(
-                child: SingleChildScrollView (
-                  child: Container (
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.blackLight,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+              Container(
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  color: AppColors.blackLight,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // ---- Заголовок фильтра и иконка ---
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextCustom(text: selectedDate != DateTime(2100) ? DateMixin.getHumanDateFromDateTime(selectedDate) : "Не выбрано", textState: TextState.bodyBig,),
-                                  const SizedBox(height: 5.0),
-                                  const TextCustom(text: 'Выбранная дата', textState: TextState.labelSmall,),
-                                ],
-                              ),
-                            ),
+                        const Expanded(
+                            child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column (
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
 
-                            const SizedBox(width: 20.0),
+                                    TextCustom(text: 'Дата и время', textState: TextState.headlineSmall,),
 
-                            IconButton(
-                              onPressed: (){
-                                _selectDate(context, selectedDate);
-                              },
-                              icon: const Icon(FontAwesomeIcons.pencil, size: 18,),
-                            ),
+                                    SizedBox(height: 10,),
 
-                          ],
+                                    TextCustom(text: 'Выбери дату и время', textState: TextState.labelMedium,),
+
+                                  ],
+                                )
+                            )
                         ),
 
-                        const SizedBox(height: 20.0),
+                        // --- Иконка ----
 
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextCustom(text: selectedDate != DateTime(2100) ? DateMixin.getHumanTime(selectedTime) : "Не выбрано", textState: TextState.bodyBig,),
-                                  const SizedBox(height: 5.0),
-                                  const TextCustom(text: 'Выбранное время', textState: TextState.labelSmall,),
-                                ],
-                              ),
-                            ),
-
-                            const SizedBox(width: 20.0),
-
-                            IconButton(
-                              onPressed: (){
-                                _selectTime(context);
-                              },
-                              icon: const Icon(FontAwesomeIcons.pencil, size: 18,),
-                            ),
-                          ],
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         ),
-
-
                       ],
                     ),
-                  ),
+
+                    const SizedBox(height: 8.0),
+
+                    // ---- Содержимое фильтра -----
+
+                    SingleChildScrollView (
+                      child: Container (
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.blackLight,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      TextCustom(text: selectedDate != DateTime(2100) ? DateMixin.getHumanDateFromDateTime(selectedDate) : "Не выбрано", textState: TextState.bodyBig,),
+                                      const SizedBox(height: 5.0),
+                                      const TextCustom(text: 'Выбранная дата', textState: TextState.labelSmall,),
+                                    ],
+                                  ),
+                                ),
+
+                                const SizedBox(width: 20.0),
+
+                                IconButton(
+                                  onPressed: (){
+                                    _selectDate(context, selectedDate);
+                                  },
+                                  icon: const Icon(FontAwesomeIcons.pencil, size: 18,),
+                                ),
+
+                              ],
+                            ),
+
+                            const SizedBox(height: 20.0),
+
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      TextCustom(text: selectedDate != DateTime(2100) ? DateMixin.getHumanTime(selectedTime) : "Не выбрано", textState: TextState.bodyBig,),
+                                      const SizedBox(height: 5.0),
+                                      const TextCustom(text: 'Выбранное время', textState: TextState.labelSmall,),
+                                    ],
+                                  ),
+                                ),
+
+                                const SizedBox(width: 20.0),
+
+                                IconButton(
+                                  onPressed: (){
+                                    _selectTime(context);
+                                  },
+                                  icon: const Icon(FontAwesomeIcons.pencil, size: 18,),
+                                ),
+                              ],
+                            ),
+
+
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // ---- Кнопки ПРИМЕНИТЬ / Отменить ---
+
+                    const SizedBox(height: 20.0),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+
+                        GestureDetector(
+                          child: const TextCustom(text: 'Отменить', color: AppColors.attentionRed,),
+                          onTap: (){
+                            setState(() {
+                              // --- При отмене просто уходим, без аргументов
+                              Navigator.of(context).pop();
+                            });
+                          }
+                        ),
+
+                        const SizedBox(width: 30.0),
+
+                        GestureDetector(
+                          child: const TextCustom(text: 'Применить', color: Colors.green,),
+                          onTap: (){
+
+                            DateTime tempDateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+
+                            Navigator.of(context).pop(tempDateTime);
+                          },
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10.0),
+
+                  ],
                 ),
               ),
-
-              // ---- Кнопки ПРИМЕНИТЬ / Отменить ---
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      buttonText: 'Отменить',
-                      state: ButtonState.secondary,
-                      onTapMethod: (){
-                        setState(() {
-                          // --- При отмене просто уходим, без аргументов
-                          Navigator.of(context).pop();
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 20.0),
-                  Expanded(
-                    child: CustomButton(
-                      buttonText: 'Применить',
-                      onTapMethod: (){
-
-                        DateTime tempDateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
-
-                        Navigator.of(context).pop(tempDateTime);
-                      },
-                    ),
-                  ),
-
-                ],
-              ),
-
-              const SizedBox(height: 16.0),
-
             ],
           ),
-        ),
+        ]
       ),
     );
   }

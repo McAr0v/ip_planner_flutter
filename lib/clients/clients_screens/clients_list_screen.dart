@@ -126,7 +126,7 @@ class ClientListScreenState extends State<ClientListScreen> {
                 label: 'Поиск по имени или телефону...',
                 textInputType: TextInputType.text,
                 active: true,
-                activateButton: true,
+                activateButton: searchController.text.isNotEmpty,
                 needButton: true,
                 onButtonClick: (){
                   setState(() {

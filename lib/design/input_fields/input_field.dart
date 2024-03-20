@@ -6,11 +6,12 @@ class InputField extends StatelessWidget {
   final TextInputType textInputType;
   final IconData? icon;
   final IconData? iconForButton;
-  final int maxLines;
+  final int? maxLines;
   final String label;
   final bool active;
   final bool needButton;
   final bool activateButton;
+  final VoidCallback? onFieldClick;
   final VoidCallback? onButtonClick;
   final ValueChanged<String>? onChanged;
 
@@ -25,6 +26,7 @@ class InputField extends StatelessWidget {
     this.maxLines = 1,
     this.needButton = false,
     this.activateButton = false,
+    this.onFieldClick,
     this.onButtonClick,
     this.onChanged
   });
@@ -51,6 +53,9 @@ class InputField extends StatelessWidget {
             enabled: active,
             maxLines: maxLines,
             onChanged: onChanged,
+            onTap: onFieldClick,
+            readOnly: onFieldClick != null ? true : false,
+
           ),
         ),
 
@@ -59,10 +64,10 @@ class InputField extends StatelessWidget {
         if (activateButton && needButton) GestureDetector(
           onTap: onButtonClick,
           child: Card(
-            color: AppColors.yellowLight,
+            color: AppColors.attentionRed,
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Icon(iconForButton, size: 18, color: AppColors.black,),
+              padding: const EdgeInsets.all(10.0),
+              child: Icon(iconForButton, size: 15, color: AppColors.black,),
             ),
           ),
         ),

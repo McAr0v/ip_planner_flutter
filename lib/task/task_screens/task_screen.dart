@@ -99,6 +99,9 @@ class TaskScreenState extends State<TaskScreen> {
                   onDelete: (){
                     deleteTask(list[index]);
                   },
+                  onTap: (){
+                    _showCreateTaskDialog(context: context, task: list[index]);
+                  }
                 );
               }
           )
@@ -123,8 +126,7 @@ class TaskScreenState extends State<TaskScreen> {
 
       setState(() {
         loading = true;
-        //list = DbInfoManager.clientsList;
-        //sortList(sort);
+        list = DbInfoManager.tasksList;
         loading = false;
       });
     }
