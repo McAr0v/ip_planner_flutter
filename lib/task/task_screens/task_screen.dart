@@ -6,7 +6,7 @@ import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
 import 'package:ip_planner_flutter/task/task_screens/create_task_popup.dart';
-import 'package:ip_planner_flutter/task/task_screens/create_task_screen.dart';
+import 'package:ip_planner_flutter/task/task_screens/watch_task_popup.dart';
 import 'package:ip_planner_flutter/task/task_widgets/task_widget.dart';
 
 import '../../design/dialogs/dialog.dart';
@@ -100,7 +100,8 @@ class TaskScreenState extends State<TaskScreen> {
                     deleteTask(list[index]);
                   },
                   onTap: (){
-                    _showCreateTaskDialog(context: context, task: list[index]);
+                      _showWatchTaskDialog(context: context, task: list[index]);
+                    //_showCreateTaskDialog(context: context, task: list[index]);
                   }
                 );
               }
@@ -111,6 +112,25 @@ class TaskScreenState extends State<TaskScreen> {
         ],
       )
     );
+  }
+
+  Future<void> _showWatchTaskDialog({required BuildContext context, required TaskCustom task}) async {
+    final results = await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return WatchTaskPopup(task: task,); // Вызываем кастомный виджет для pop-up
+      },
+    );
+
+    if (results != null) {
+
+      setState(() {
+        loading = true;
+        list = DbInfoManager.tasksList;
+        loading = false;
+      });
+    }
   }
 
   Future<void> _showCreateTaskDialog({required BuildContext context, TaskCustom? task}) async {

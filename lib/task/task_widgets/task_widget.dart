@@ -6,9 +6,6 @@ import 'package:ip_planner_flutter/task/task_class.dart';
 import '../../dates/date_mixin.dart';
 import '../../design/app_colors.dart';
 import '../../design/text_widgets/text_custom.dart';
-import '../../links/open_url_class.dart';
-import '../../links/url_path_enum.dart';
-import '../task_screens/create_task_screen.dart';
 
 class TaskWidget extends StatelessWidget {
   final TaskCustom task; // Передаваемая переменная

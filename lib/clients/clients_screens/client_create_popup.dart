@@ -122,63 +122,72 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
             children: [
               Container(
                 margin: const EdgeInsets.all(10.0),
-                padding: const EdgeInsets.all(20.0),
+                //padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
-                  color: AppColors.blackLight,
+                  color: AppColors.black,
                   borderRadius: BorderRadius.circular(15), // настройте радиус скругления углов для контейнера
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                            child: Column (
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                    Container(
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: const BoxDecoration(
+                        color: AppColors.blackLight,
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15),), // настройте радиус скругления углов для контейнера
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: Column (
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
 
-                                if (!edit) TextCustom(text: widget.client != null ? widget.client!.name : 'Создание клиента', textState: TextState.headlineSmall,),
+                                  if (!edit) TextCustom(text: widget.client != null ? widget.client!.name : 'Создание клиента', textState: TextState.headlineSmall),
 
-                                if (edit) const TextCustom(text: 'Редактирование', textState: TextState.headlineSmall,),
+                                  if (edit) const TextCustom(text: 'Редактирование', textState: TextState.headlineSmall),
 
-                                const SizedBox(height: 10,),
+                                  const SizedBox(height: 5,),
 
-                                if (widget.client == null) const TextCustom(text: 'Введите данные о клиенте', textState: TextState.labelMedium,),
-                                if (widget.client != null && !edit) const TextCustom(text: 'Данные клиента', textState: TextState.labelMedium,),
-                                if (widget.client != null && edit) const TextCustom(text: 'Отредактируйте данные клиента', textState: TextState.labelMedium,),
+                                  if (widget.client == null) const TextCustom(text: 'Введите данные о клиенте', textState: TextState.labelMedium ),
+                                  if (widget.client != null && !edit) const TextCustom(text: 'Данные клиента', textState: TextState.labelMedium),
+                                  if (widget.client != null && edit) const TextCustom(text: 'Отредактируйте данные клиента', textState: TextState.labelMedium,),
 
-                              ],
-                            )
-                        ),
+                                ],
+                              )
+                          ),
 
-                        // --- Иконка ----
+                          // --- Иконка ----
 
-                        if (widget.client != null) IconButton(
-                          icon: const Icon(FontAwesomeIcons.pencil, size: 18,),
-                          onPressed: () {
-                            setState(() {
-                              edit = true;
-                            });
-                          },
-                        ),
+                          if (widget.client != null) IconButton(
+                            icon: const Icon(FontAwesomeIcons.pencil, size: 18, ),
+                            onPressed: () {
+                              setState(() {
+                                edit = true;
+                              });
+                            },
+                          ),
 
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
                     ),
 
-                    const SizedBox(height: 20.0),
+                    //const SizedBox(height: 20.0),
 
                     // ---- Содержимое фильтра -----
 
                     SingleChildScrollView (
+                      padding: EdgeInsets.all(20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,76 +333,81 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
                       ),
                     ),
 
-                    if (widget.client == null || edit) const SizedBox(height: 30.0),
+                    //if (widget.client == null || edit) const SizedBox(height: 30.0),
 
-                    if (widget.client == null || edit) Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
+                    if (widget.client == null || edit) Container(
+                      padding: const EdgeInsets.all(20.0),
+                      decoration: const BoxDecoration(
+                        color: AppColors.blackLight,
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15),), // настройте радиус скругления углов для контейнера
+                      ),
 
-                        GestureDetector(
-                          child: const TextCustom(text: 'Отменить', color: AppColors.attentionRed,),
-                          onTap: (){Navigator.of(context).pop();},
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
 
-                        const SizedBox(width: 30.0),
+                          GestureDetector(
+                            child: const TextCustom(text: 'Отменить', color: AppColors.attentionRed,),
+                            onTap: (){Navigator.of(context).pop();},
+                          ),
 
-                        GestureDetector(
-                          child: const TextCustom(text: 'Сохранить', color: Colors.green,),
-                          onTap: () async {
+                          const SizedBox(width: 30.0),
 
-                            setState(() {
-                              saving = true;
-                            });
+                          GestureDetector(
+                            child: const TextCustom(text: 'Сохранить', color: Colors.green,),
+                            onTap: () async {
 
-                            if (nameController.text.isNotEmpty){
+                              setState(() {
+                                saving = true;
+                              });
 
-                              ClientCustom tempClient = ClientCustom(
-                                  id: id,
-                                  name: nameController.text,
-                                  phone: phoneController.text,
-                                  createDate: createDate,
-                                  birthDay: birthday,
-                                  gender: gender,
-                                  whatsapp: whatsappController.text,
-                                  instagram: instagramController.text,
-                                  telegram: telegramController.text
+                              if (nameController.text.isNotEmpty){
 
-                              );
+                                ClientCustom tempClient = ClientCustom(
+                                    id: id,
+                                    name: nameController.text,
+                                    phone: phoneController.text,
+                                    createDate: createDate,
+                                    birthDay: birthday,
+                                    gender: gender,
+                                    whatsapp: whatsappController.text,
+                                    instagram: instagramController.text,
+                                    telegram: telegramController.text
 
-                              String result = await tempClient.publishToDb(DbInfoManager.currentUser.uid);
+                                );
 
-                              if (result == 'ok'){
+                                String result = await tempClient.publishToDb(DbInfoManager.currentUser.uid);
 
-                                if (widget.client != null) {
-                                  DbInfoManager.clientsList.removeWhere((element) => element.id == tempClient.id);
+                                if (result == 'ok'){
+
+                                  if (widget.client != null) {
+                                    DbInfoManager.clientsList.removeWhere((element) => element.id == tempClient.id);
+                                  }
+
+                                  DbInfoManager.clientsList.add(tempClient);
+
+                                  showSnackBar('Клиент успешно опубликован!', Colors.green, 2);
+
+                                  returnWithResult(tempClient);
+
+                                } else {
+
+                                  showSnackBar('Произошла ошибка - $result', AppColors.attentionRed, 2);
+
                                 }
-
-                                DbInfoManager.clientsList.add(tempClient);
-
-                                showSnackBar('Клиент успешно опубликован!', Colors.green, 2);
-
-                                returnWithResult(tempClient);
-
                               } else {
-
-                                showSnackBar('Произошла ошибка - $result', AppColors.attentionRed, 2);
-
+                                showSnackBar('Имя должно быть обязательно заполнено!', AppColors.attentionRed, 2);
                               }
-                            } else {
-                              showSnackBar('Имя должно быть обязательно заполнено!', AppColors.attentionRed, 2);
-                            }
 
-                            setState(() {
-                              saving = false;
-                            });
+                              setState(() {
+                                saving = false;
+                              });
 
-                          },
-                        ),
-                      ],
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-
-                    if (widget.client == null || edit) const SizedBox(height: 10.0),
-
                   ],
                 ),
               ),

@@ -239,7 +239,7 @@ class ChooseDatePopupState extends State<ChooseDatePopup> {
 
       //locale: const Locale('ru', 'RU'),
       context: context,
-      initialDate: initial,
+      initialDate: initial.isBefore(DateTime.now()) ? DateTime.now() : initial,
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
       helpText: 'Выбери дату',

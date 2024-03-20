@@ -146,71 +146,69 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
                   Expanded(
                     child: Container(
                       margin: const EdgeInsets.all(10.0),
-                      padding: const EdgeInsets.all(20.0),
+                      //padding: const EdgeInsets.all(20.0),
                       decoration: BoxDecoration(
-                        color: AppColors.blackLight,
+                        color: AppColors.black,
                         borderRadius: BorderRadius.circular(15), // настройте радиус скругления углов для контейнера
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                  child: Column (
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                    
-                                      if (!edit) TextCustom(text: widget.task != null ? widget.task!.label : 'Создание задачи', textState: TextState.headlineSmall,),
-                    
-                                      if (edit) const TextCustom(text: 'Редактирование', textState: TextState.headlineSmall,),
-                    
-                                      const SizedBox(height: 10,),
-                    
-                                      if (widget.task == null) const TextCustom(text: 'Заполните поля задачи', textState: TextState.labelMedium,),
-                                      if (widget.task != null && !edit) const TextCustom(text: 'Данные о задаче', textState: TextState.labelMedium,),
-                                      if (widget.task != null && edit) const TextCustom(text: 'Отредактируйте задачу', textState: TextState.labelMedium,),
-                    
-                                    ],
-                                  )
-                              ),
-                    
-                              // --- Иконка ----
-                    
-                              if (widget.task != null) IconButton(
-                                icon: const Icon(FontAwesomeIcons.pencil, size: 18,),
-                                onPressed: () {
-                                  setState(() {
-                                    edit = true;
-                                  });
-                                },
-                              ),
-                    
-                              IconButton(
-                                icon: const Icon(Icons.close),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
+                          Container(
+                            padding: const EdgeInsets.all(20.0),
+                            decoration: const BoxDecoration(
+                              color: AppColors.blackLight,
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15),), // настройте радиус скругления углов для контейнера
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                    child: Column (
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+
+                                        if (!edit) TextCustom(text: widget.task != null ? "Задача" : 'Создание задачи', textState: TextState.headlineSmall,),
+
+                                        if (edit) const TextCustom(text: 'Редактирование', textState: TextState.headlineSmall,),
+
+                                        const SizedBox(height: 10,),
+
+                                        if (widget.task == null) const TextCustom(text: 'Заполните поля задачи', textState: TextState.labelMedium,),
+                                        if (widget.task != null && !edit) const TextCustom(text: 'Данные о задаче', textState: TextState.labelMedium,),
+                                        if (widget.task != null && edit) const TextCustom(text: 'Отредактируйте задачу', textState: TextState.labelMedium,),
+
+                                      ],
+                                    )
+                                ),
+
+                                IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                    
-                          const SizedBox(height: 20.0),
-                    
+
+                          //const SizedBox(height: 20.0),
+
                           // ---- Содержимое фильтра -----
-                    
+
                           Expanded(
                             child: SingleChildScrollView (
+                              padding: const EdgeInsets.all(20),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
 
-                                  const SizedBox(height: 10.0),
-                                                
+                                  //const SizedBox(height: 10.0),
+
                                   InputField(
                                     controller: labelController,
                                     label: widget.task == null || edit  ? 'Заголовок (Обязательно)' : 'Заголовок',
@@ -231,15 +229,15 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
                                     },
                                     iconForButton: FontAwesomeIcons.x,
                                   ),
-                                                
+
                                   const SizedBox(height: 20,),
-                                                
+
                                   InputField(
                                     controller: commentController,
                                     label: 'Комментарий',
                                     textInputType: TextInputType.multiline,
                                     active: widget.task == null || edit ? true : false,
-                                    icon: Icons.person,
+                                    icon: Icons.comment,
                                     maxLines: null,
                                     needButton: (widget.task == null || edit) && commentController.text != '' && true,
                                     activateButton: commentController.text != '',
@@ -255,7 +253,7 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
                                     },
                                     iconForButton: FontAwesomeIcons.x,
                                   ),
-                                                
+
                                   const SizedBox(height: 20,),
 
                                   InputField(
@@ -275,7 +273,7 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
                                       }
                                     },
                                     iconForButton: FontAwesomeIcons.x,
-                                    icon: FontAwesomeIcons.user,
+                                    icon: Icons.person,
                                     activateButton: widget.task == null || edit ? true : false,
                                     onButtonClick: (){
                                       setState(() {
@@ -335,9 +333,9 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
                                     iconForButton: FontAwesomeIcons.x,
                                     icon: FontAwesomeIcons.calendarDays,
                                     activateButton: widget.task == null || edit ? true : false,
-                                                
+
                                   ),
-                                                
+
                                   const SizedBox(height: 20,),
 
                                   InputField(
@@ -362,7 +360,7 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
                                       });
                                     },
                                     iconForButton: FontAwesomeIcons.x,
-                                    icon: FontAwesomeIcons.calendarDays,
+                                    icon: FontAwesomeIcons.calendarDay,
                                     activateButton: widget.task == null || edit ? true : false,
 
                                   ),
@@ -417,41 +415,48 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
                               ),
                             ),
                           ),
-                    
-                          if (widget.task == null || edit) const SizedBox(height: 30.0),
-                    
-                          if (widget.task == null || edit) Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                    
-                              GestureDetector(
-                                child: const TextCustom(text: 'Отменить', color: AppColors.attentionRed,),
-                                onTap: (){Navigator.of(context).pop();},
-                              ),
-                    
-                              const SizedBox(width: 30.0),
-                    
-                              GestureDetector(
-                                child: const TextCustom(text: 'Сохранить', color: Colors.green,),
-                                onTap: ()async {
-                                  await _saveTask(
-                                      status: status,
-                                      label: labelController.text,
-                                      place: placeController.text,
-                                      instagram: instagramController.text,
-                                      startDate: startDate,
-                                      endDate: endDate,
-                                      phone: phoneController.text,
-                                      comment: commentController.text,
-                                      client: client
-                                  );
-                                },
-                              ),
-                            ],
+
+                          //if (widget.task == null || edit) const SizedBox(height: 30.0),
+
+                          if (widget.task == null || edit) Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: const BoxDecoration(
+                              color: AppColors.blackLight,
+                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(18), bottomLeft: Radius.circular(18)), // настройте радиус скругления углов для контейнера
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+
+                                GestureDetector(
+                                  child: const TextCustom(text: 'Отменить', color: AppColors.attentionRed,),
+                                  onTap: (){Navigator.of(context).pop();},
+                                ),
+
+                                const SizedBox(width: 30.0),
+
+                                GestureDetector(
+                                  child: const TextCustom(text: 'Сохранить', color: Colors.green,),
+                                  onTap: ()async {
+                                    await _saveTask(
+                                        status: status,
+                                        label: labelController.text,
+                                        place: placeController.text,
+                                        instagram: instagramController.text,
+                                        startDate: startDate,
+                                        endDate: endDate,
+                                        phone: phoneController.text,
+                                        comment: commentController.text,
+                                        client: client
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                    
-                          if (widget.task == null || edit) const SizedBox(height: 10.0),
-                    
+
+                          //if (widget.task == null || edit) const SizedBox(height: 10.0),
+
                         ],
                       ),
                     ),
