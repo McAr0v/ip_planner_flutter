@@ -1,5 +1,8 @@
-import 'package:ip_planner_flutter/pay/pay_type_enum.dart';
+import 'dart:ui';
+
 import 'package:ip_planner_flutter/task/task_status_enum.dart';
+
+import '../design/app_colors.dart';
 
 class TaskStatus {
   TaskStatusEnum taskStatusEnum;
@@ -19,8 +22,17 @@ class TaskStatus {
     switch (taskStatusEnum) {
       case TaskStatusEnum.cancelled: return needTranslate == false ? "cancelled" : "Отменено";
       case TaskStatusEnum.pending: return needTranslate == false ? "pending": "В ожидании";
-      case TaskStatusEnum.inProgress: return needTranslate == false ? "inProgress": "В процессе выполнения";
+      case TaskStatusEnum.inProgress: return needTranslate == false ? "inProgress": "В процессе";
       case TaskStatusEnum.completed: return needTranslate == false ? "completed": "Завершено";
+    }
+  }
+
+  Color getTaskStatusColor(){
+    switch (taskStatusEnum) {
+      case TaskStatusEnum.cancelled: return AppColors.cancelled;
+      case TaskStatusEnum.pending: return AppColors.waiting;
+      case TaskStatusEnum.inProgress: return AppColors.inProgress;
+      case TaskStatusEnum.completed: return AppColors.completed;
     }
   }
 

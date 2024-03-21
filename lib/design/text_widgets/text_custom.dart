@@ -10,8 +10,9 @@ class TextCustom extends StatelessWidget {
   final bool softWrap;
   final FontWeight? weight;
   final int? maxLines;
+  final bool underLine;
 
-  const TextCustom({super.key, required this.text, this.textState = TextState.bodyMedium, this.color = AppColors.white, this.softWrap = true, this.weight, this.maxLines}); // Указываем значения по умолчанию
+  const TextCustom({super.key, required this.text, this.textState = TextState.bodyMedium, this.color = AppColors.white, this.softWrap = true, this.weight, this.maxLines, this.underLine = false}); // Указываем значения по умолчанию
 
   double _switchSize(TextState state){
     switch (state){
@@ -70,10 +71,12 @@ class TextCustom extends StatelessWidget {
         color: color,
         fontSize: _switchSize(textState),
         fontWeight: weight ?? _switchWeight(textState),
+        decoration: underLine ? TextDecoration.underline : null,
       ),
       softWrap: softWrap,
       maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
+
     );
   }
 }

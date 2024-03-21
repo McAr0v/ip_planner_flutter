@@ -1,12 +1,6 @@
 import 'dart:ui';
 
 class AppColors {
-  /*static const Color brandColor = Color(0xFFFED32C);
-  static const Color greyOnBackground = Color(0xFF1A1E23);
-  static const Color greyBackground = Color(0xFF202329);
-  static const Color greyForCards = Color(0xFF2B3138);
-  static const Color greyText = Color(0xFF6E7177);
-  static const Color white = Color(0xFFFCFDFE);*/
 
   static const Color attentionRed = Color(0xFFFA5C47);
   static const Color black = Color(0xFF000000);
@@ -22,5 +16,9 @@ class AppColors {
   static const Color telegram = Color(0xFF0088CC);
   static const Color whatsapp = Color(0xFF25D366);
 
+  static const Color waiting = Color(0xFF626262); // Светло-серый (#CCCCCC)
+  static const Color cancelled = Color(0xFF940C0C); // Красный (#FF0000)
+  static const Color completed = Color(0xFF298829); // Зеленый (#00FF00)
+  static const Color inProgress = Color(0xFF313191); // Синий (#0000FF)
 
 }

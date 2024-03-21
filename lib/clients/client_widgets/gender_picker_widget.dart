@@ -1,38 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:ip_planner_flutter/task/task_status.dart';
+import 'package:ip_planner_flutter/clients/gender_class.dart';
+import 'package:ip_planner_flutter/clients/gender_enum.dart';
 import '../../design/app_colors.dart';
 import '../../design/text_widgets/text_custom.dart';
 import '../../design/text_widgets/text_state.dart';
-import '../task_status_enum.dart';
 
-class StatusPickerWidget extends StatefulWidget {
+class GenderPickerWidget extends StatefulWidget {
 
-  final TaskStatus status;
+  final Gender gender;
 
-  const StatusPickerWidget({super.key, required this.status});
+  const GenderPickerWidget({super.key, required this.gender});
 
   @override
-  StatusPickerWidgetState createState() => StatusPickerWidgetState();
+  GenderPickerWidgetState createState() => GenderPickerWidgetState();
 
 }
 
-class StatusPickerWidgetState extends State<StatusPickerWidget> {
+class GenderPickerWidgetState extends State<GenderPickerWidget> {
 
-  List<TaskStatusEnum> list = [
-    TaskStatusEnum.pending,
-    TaskStatusEnum.cancelled,
-    TaskStatusEnum.completed,
-    TaskStatusEnum.inProgress
+  List<GenderEnum> list = [
+    GenderEnum.notChosen,
+    GenderEnum.male,
+    GenderEnum.female,
+
   ];
 
-  late TaskStatusEnum chosenStatus;
+  late GenderEnum chosenGender;
   int chosenIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    chosenStatus = widget.status.taskStatusEnum;
-    chosenIndex = getIndex(chosenStatus);
+    chosenGender = widget.gender.gender;
+    chosenIndex = getIndex(chosenGender);
 
 
   }
@@ -94,19 +94,19 @@ class StatusPickerWidgetState extends State<StatusPickerWidget> {
                       const SizedBox(height: 8.0),
 
                       SizedBox(
-                        height: 300,
+                        height: 230,
                         child: ListView.builder(
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             itemCount: list.length,
                             itemBuilder: (context, index) {
 
-                              TaskStatus status = TaskStatus(taskStatusEnum: list[index]);
+                              Gender gender = Gender(gender: list[index]);
 
                               return GestureDetector(
                                 onTap: (){
                                   setState(() {
-                                    chosenStatus = list[index];
-                                    chosenIndex = getIndex(chosenStatus);
+                                    chosenGender = list[index];
+                                    chosenIndex = getIndex(chosenGender);
                                   });
                                 },
                                 child: Container(
@@ -119,7 +119,7 @@ class StatusPickerWidgetState extends State<StatusPickerWidget> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      TextCustom(text: status.getTaskStatusString(needTranslate: true), color: chosenIndex == index ? AppColors.black : AppColors.white,),
+                                      TextCustom(text: gender.getGenderString(needTranslate: true), color: chosenIndex == index ? AppColors.black : AppColors.white,),
                                     ],
                                   ),
                                 ),
@@ -151,8 +151,8 @@ class StatusPickerWidgetState extends State<StatusPickerWidget> {
                           GestureDetector(
                             child: const TextCustom(text: 'Применить', color: Colors.green,),
                             onTap: (){
-                              TaskStatus tempStatus = TaskStatus(taskStatusEnum: chosenStatus);
-                              Navigator.of(context).pop(tempStatus);
+                              Gender tempGender = Gender(gender: chosenGender);
+                              Navigator.of(context).pop(tempGender);
                             },
                           ),
                         ],
@@ -170,9 +170,9 @@ class StatusPickerWidgetState extends State<StatusPickerWidget> {
     );
   }
 
-  int getIndex (TaskStatusEnum status) {
+  int getIndex (GenderEnum gender) {
     for (int i = 0; i<list.length; i++){
-      if (list[i] == status) return i;
+      if (list[i] == gender) return i;
     }
 
     return -1;

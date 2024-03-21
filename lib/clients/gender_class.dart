@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ip_planner_flutter/clients/gender_enum.dart';
 
 class Gender {
@@ -18,6 +20,14 @@ class Gender {
       case GenderEnum.male: return needTranslate == false ? "male": "Мужчина";
       case GenderEnum.female: return needTranslate == false ? "female": "Женщина";
       case GenderEnum.notChosen: return needTranslate == false ? "notChosen": "Не выбрано";
+    }
+  }
+
+  IconData getGenderIcon(){
+    switch (gender) {
+      case GenderEnum.male: return FontAwesomeIcons.person;
+      case GenderEnum.female: return FontAwesomeIcons.personDress;
+      case GenderEnum.notChosen: return FontAwesomeIcons.genderless;
     }
   }
 

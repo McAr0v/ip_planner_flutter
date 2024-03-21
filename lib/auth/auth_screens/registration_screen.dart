@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ip_planner_flutter/auth/auth_manager.dart';
 import 'package:ip_planner_flutter/design/buttons/button_state.dart';
 import 'package:ip_planner_flutter/design/buttons/custom_button.dart';
+import 'package:ip_planner_flutter/design/check_boxes/check_box_widget.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
 import '../../database/database_info_manager.dart';
 import '../../design/app_colors.dart';
 import '../../design/snackBars/custom_snack_bar.dart';
-import '../../design/text_widgets/text_with_link.dart';
 import '../../user/user_custom.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -126,25 +126,15 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                           ),
                           const SizedBox(height: 20.0),
 
-                          // TODO Сделать функцию отрисовки чек-бокса
-
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: privacyPolicyChecked,
-                                onChanged: (value) {
-                                  togglePrivacyPolicyChecked();
-                                },
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width*0.75,
-                                child: const TextWithLink(
-                                  linkedText: 'политики конфиденциальности',
-                                  uri: '/privacy_policy',
-                                  text: 'Подтверждаю согласие с правилами',
-                                ),
-                              )
-                            ],
+                          CheckBoxWidget(
+                              text: 'Подтверждаю согласие с правилами',
+                              checkBoxValue: privacyPolicyChecked,
+                              onChanged: (value) {
+                                togglePrivacyPolicyChecked();
+                              },
+                              withLink: true,
+                              textForLink: 'политики конфиденциальности',
+                              link: '/privacy_policy',
                           ),
 
                           const SizedBox(height: 20.0),

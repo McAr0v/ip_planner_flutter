@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:ip_planner_flutter/abstract_classes/entity_from_db.dart';
 import 'package:ip_planner_flutter/dates/date_mixin.dart';
 import 'package:ip_planner_flutter/task/task_status.dart';
+import 'package:ip_planner_flutter/task/task_status_enum.dart';
 import '../database/mixin_database.dart';
 
 class TaskCustom with DateMixin implements EntityFromDb{
@@ -100,6 +101,22 @@ class TaskCustom with DateMixin implements EntityFromDb{
     String entityDeleteResult = await MixinDatabase.deleteFromDb(entityPath);
 
     return entityDeleteResult;
+
+  }
+
+  bool checkFilter(
+      bool boolPending,
+      bool boolCancelled,
+      bool boolInProgress,
+      bool boolCompleted,
+      ){
+
+    bool pending = boolPending && status.taskStatusEnum == TaskStatusEnum.pending;
+    bool cancelled = boolCancelled && status.taskStatusEnum == TaskStatusEnum.cancelled;
+    bool inProgress = boolInProgress && status.taskStatusEnum == TaskStatusEnum.inProgress;
+    bool completed = boolCompleted && status.taskStatusEnum == TaskStatusEnum.completed;
+
+    return pending || cancelled || inProgress || completed;
 
   }
 

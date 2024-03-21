@@ -9,6 +9,7 @@ import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
 import 'package:ip_planner_flutter/task/task_class.dart';
 import 'package:ip_planner_flutter/task/task_widgets/change_status_dialog.dart';
+import '../../database/database_info_manager.dart';
 import '../../design/app_colors.dart';
 import '../../design/snackBars/custom_snack_bar.dart';
 import '../task_status.dart';
@@ -24,8 +25,6 @@ class WatchTaskPopup extends StatefulWidget {
   WatchTaskPopupState createState() => WatchTaskPopupState();
 }
 
-// -- Виджет отображения фильтра в мероприятиях ---
-
 class WatchTaskPopupState extends State<WatchTaskPopup> {
 
   TaskCustom task = TaskCustom.empty();
@@ -34,8 +33,7 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
   bool loading = true;
   bool saving = false;
   bool needRefresh = true;
-
-  String tempTest = 'Etiam pellentesque lacinia eros, ut aliquam nunc condimentum nec. Donec sit amet tellus in metus placerat euismod vel ut metus. Ut finibus nunc ligula, non interdum odio hendrerit sit amet. Sed sagittis lorem at enim vestibulum, eget vehicula lorem varius. Phasellus id dolor arcu. Integer eu feugiat dui. Aenean in malesuada velit, vel commodo nunc. Duis vulputate, est sit amet fermentum auctor, leo est efficitur velit, id faucibus risus eros sit amet turpis. Integer sed posuere mi. Ut efficitur fermentum tortor, sed dignissim magna luctus at. Vivamus tincidunt id urna sit amet fermentum. Sed id quam a elit egestas condimentum in sed arcu. Vivamus nec diam volutpat, posuere leo ac, facilisis quam. Nullam feugiat dui vel tincidunt tempor. Sed in leo vitae neque malesuada convallis. Nam pharetra, dolor eget mollis sollicitudin, ipsum purus dapibus eros, a interdum nisi metus sed odio.';
+  bool statusChangeInView = false;
 
   @override
   void initState() {
@@ -64,8 +62,6 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
 
   }
 
-  // ---- САМ ЭКРАН ФИЛЬТРА -----
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,29 +86,31 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(20.0),
-                          decoration: const BoxDecoration(
-                            color: AppColors.blackLight,
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15),), // настройте радиус скругления углов для контейнера
+                          decoration: BoxDecoration(
+                            color: chosenStatus.getTaskStatusColor(),
+                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15),), // настройте радиус скругления углов для контейнера
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
-                                  child: Column (
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      _showStatusDialog(context: context, status: chosenStatus);
+                                    },
+                                    child: Column (
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
 
-                                      TextCustom(text: task.label, textState: TextState.headlineSmall),
-                                      const SizedBox(height: 5,),
-                                      const TextCustom(text: 'Просмотр задачи', textState: TextState.labelMedium),
-
-                                    ],
+                                        TextCustom(text: task.label, textState: TextState.headlineSmall),
+                                        const SizedBox(height: 5,),
+                                        TextCustom(text: chosenStatus.getTaskStatusString(needTranslate: true), textState: TextState.bodySmall, underLine: true,),
+                                      ],
+                                    ),
                                   )
                               ),
-
-                              // --- Иконка ----
 
                               IconButton(
                                 icon: const Icon(FontAwesomeIcons.pencil, size: 18, ),
@@ -123,17 +121,13 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
 
                               IconButton(
                                 icon: const Icon(Icons.close),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
+                                onPressed: (){
+                                  returnWithResult(needRefresh);
                                 },
                               ),
                             ],
                           ),
                         ),
-
-                        //const SizedBox(height: 20.0),
-
-                        // ---- Содержимое фильтра -----
 
                         SingleChildScrollView (
                           padding: const EdgeInsets.all(20),
@@ -142,28 +136,20 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
 
-                              GestureDetector(
-                                onTap: (){
-                                  _showStatusDialog(context: context, status: chosenStatus);
-                                },
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextCustom(text: chosenStatus.getTaskStatusString(needTranslate: true), textState: TextState.headlineSmall),
-                                    const SizedBox(height: 5,),
-                                    const TextCustom(text: 'Изменить статус', textState: TextState.labelMedium, color: AppColors.yellowLight,),
-                                  ],
-                                ),
+                              TextCustom(
+                                  text: task.label,
+                                  textState: TextState.bodyBig,
+                                weight: FontWeight.bold,
+                                maxLines: 100,
                               ),
 
                               const SizedBox(height: 20,),
 
                               if (task.comment.isNotEmpty ) ScrollableText(text: task.comment),
 
-                              if (task.startDate != DateTime(2100) || task.endDate != DateTime(2100)) const SizedBox(height: 20,),
+                              if (task.comment.isNotEmpty ) const SizedBox(height: 20,),
+
                               if (task.startDate != DateTime(2100) || task.endDate != DateTime(2100)) const TextCustom(text: 'Сроки:', textState: TextState.bodyBig, weight: FontWeight.bold,),
-
-
 
                               if (task.startDate != DateTime(2100) || task.endDate != DateTime(2100)) const SizedBox(height: 10,),
                               if (task.startDate != DateTime(2100) || task.endDate != DateTime(2100)) Row(
@@ -201,17 +187,23 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
                                 ],
                               ),
 
-                              if (client.id.isNotEmpty || task.place.isNotEmpty || client.id.isNotEmpty)  Column(
+                              if (client.id.isNotEmpty) const SizedBox(height: 20,),
+
+                              if (client.id.isNotEmpty)  Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if (client.id.isNotEmpty) const SizedBox(height: 30,),
 
-                                  if (client.id.isNotEmpty) TextCustom(
+                                  TextCustom(
                                     text: client.name,
                                     textState: TextState.bodyBig,
                                     weight: FontWeight.bold,
                                   ),
-                                  if (client.id.isNotEmpty) const TextCustom(
+                                  if (
+                                  client.whatsapp.isNotEmpty ||
+                                      client.telegram.isNotEmpty ||
+                                      client.instagram.isNotEmpty ||
+                                      client.phone.isNotEmpty
+                                  ) const TextCustom(
                                     text: 'Контакты клиента',
                                     textState: TextState.labelMedium,
                                     color: AppColors.greyLight,
@@ -224,30 +216,40 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
                                       client.phone.isNotEmpty
                                   ) const SizedBox(height: 10,),
 
-                                  SocialWidget(
+                                  if (
+                                  client.whatsapp.isNotEmpty ||
+                                      client.telegram.isNotEmpty ||
+                                      client.instagram.isNotEmpty ||
+                                      client.phone.isNotEmpty
+                                  ) SocialWidget(
                                     whatsapp: client.whatsapp,
                                     telegram: client.telegram,
                                     instagram: client.instagram,
                                     phone: client.phone,
                                   ),
+                                ],
+                              ),
 
-                                  if (task.instagram.isNotEmpty || task.phone.isNotEmpty || task.place.isNotEmpty) const SizedBox(height: 30,),
-                                  if (task.instagram.isNotEmpty || task.phone.isNotEmpty || task.place.isNotEmpty) const TextCustom(text: 'Контактная информация:', textState: TextState.bodyBig, weight: FontWeight.bold,),
-                                  if (task.instagram.isNotEmpty || task.phone.isNotEmpty || task.place.isNotEmpty) const SizedBox(height: 10,),
+                              if (task.instagram.isNotEmpty || task.phone.isNotEmpty || task.place.isNotEmpty) Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 20,),
+                                  const TextCustom(text: 'Контактная информация:', textState: TextState.bodyBig, weight: FontWeight.bold,),
+                                  const TextCustom(
+                                    text: 'Дополнительно указанные контакты',
+                                    textState: TextState.labelMedium,
+                                    color: AppColors.greyLight,
+                                  ),
+                                  const SizedBox(height: 10,),
                                   if (task.place.isNotEmpty) TextCustom(text: task.place, textState: TextState.bodyMedium),
-
                                   if (task.instagram.isNotEmpty || task.phone.isNotEmpty) const SizedBox(height: 10,),
                                   if (task.instagram.isNotEmpty || task.phone.isNotEmpty) SocialWidget(instagram: task.instagram, phone: task.phone,),
-
-
                                 ],
                               )
 
                             ],
                           ),
                         ),
-
-                        //if (widget.client == null || edit) const SizedBox(height: 30.0),
 
                         Container(
                           padding: const EdgeInsets.all(20.0),
@@ -260,21 +262,27 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
 
-                              if (chosenStatus.taskStatusEnum == task.status.taskStatusEnum) GestureDetector(
+                              if (!statusChangeInView) GestureDetector(
                                 child: const TextCustom(text: 'Закрыть', color: AppColors.attentionRed,),
-                                onTap: (){Navigator.of(context).pop();},
+                                onTap: (){
+                                  returnWithResult(needRefresh);
+                                },
                               ),
 
-                              if (chosenStatus.taskStatusEnum != task.status.taskStatusEnum) GestureDetector(
+                              if (statusChangeInView) GestureDetector(
                                 child: const TextCustom(text: 'Отменить', color: AppColors.attentionRed,),
-                                onTap: (){Navigator.of(context).pop();},
+                                onTap: (){
+                                  returnWithResult(needRefresh);
+                                  },
                               ),
 
-                              if (chosenStatus.taskStatusEnum != task.status.taskStatusEnum) const SizedBox(width: 30.0),
+                              if (statusChangeInView) const SizedBox(width: 30.0),
 
-                              if (chosenStatus.taskStatusEnum != task.status.taskStatusEnum) GestureDetector(
+                              if (statusChangeInView) GestureDetector(
                                 child: const TextCustom(text: 'Сохранить', color: Colors.green,),
                                 onTap: () async {
+
+                                  _saveTask(status: chosenStatus, task: task);
 
                                 },
                               ),
@@ -308,6 +316,11 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
         loading = true;
         needRefresh = true;
         task = results;
+
+        if (task.status != chosenStatus){
+          chosenStatus = task.status;
+        }
+
         if (task.clientId.isNotEmpty) {
           client = client.getClientFromList(task.clientId);
         } else {
@@ -318,15 +331,12 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
     }
   }
 
-  void returnWithResult(ClientCustom? client, bool refresh){
-    if (client != null){
-      Navigator.of(context).pop(client);
-    } else if (refresh) {
-      Navigator.of(context).pop(client);
+  void returnWithResult(bool refresh){
+    if (refresh) {
+      Navigator.of(context).pop(refresh);
     } else {
       Navigator.of(context).pop();
     }
-
   }
 
   void showSnackBar(String message, Color color, int showTime) {
@@ -339,7 +349,7 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return StatusPickerWidget(status: status,); // Вызываем кастомный виджет для pop-up
+        return StatusPickerWidget(status: status,);
       },
     );
 
@@ -348,11 +358,46 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
       setState(() {
         loading = true;
         needRefresh = true;
+        statusChangeInView = true;
+        task.status = results;
         chosenStatus = results;
         loading = false;
       });
 
     }
+  }
+
+  Future<void> _saveTask ({
+    required TaskStatus status,
+    required TaskCustom task,
+  }) async {
+
+    setState(() {
+      loading = true;
+    });
+
+    TaskCustom tempTask = task;
+
+    tempTask.status = chosenStatus;
+
+    String result = await tempTask.publishToDb(DbInfoManager.currentUser.uid);
+
+    if (result == 'ok'){
+
+      DbInfoManager.replaceChangedTaskItem(tempTask);
+
+      showSnackBar('Задача успешно сохранена', Colors.green, 2);
+
+      returnWithResult(true);
+
+    } else {
+      showSnackBar('Произошла ошибка - $result', AppColors.attentionRed, 2);
+    }
+
+    setState(() {
+      loading = false;
+    });
+
   }
 
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ip_planner_flutter/clients/client_widgets/gender_picker_widget.dart';
 import 'package:ip_planner_flutter/database/database_info_manager.dart';
 import 'package:ip_planner_flutter/dates/date_mixin.dart';
 import 'package:ip_planner_flutter/design/input_fields/input_field.dart';
@@ -38,6 +39,7 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
   late TextEditingController telegramController;
   late TextEditingController whatsappController;
   late TextEditingController dateController;
+  late TextEditingController genderController;
   late DateTime birthday;
   late DateTime createDate;
   late Gender gender;
@@ -69,11 +71,15 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
     telegramController = TextEditingController();
     whatsappController = TextEditingController();
     dateController = TextEditingController();
+    genderController = TextEditingController();
+
+
 
     birthday = DateTime(2100);
     createDate = DateTime.now();
 
     gender = Gender();
+
 
 
     if (widget.client != null) {
@@ -102,6 +108,8 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
       id = MixinDatabase.generateKey()!;
 
     }
+
+    genderController.text = gender.getGenderString(needTranslate: true);
 
     loading = false;
   }
@@ -329,11 +337,32 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
 
                           ),
 
+                          const SizedBox(height: 20,),
+
+                          InputField(
+                            controller: genderController,
+                            label: 'Пол',
+                            textInputType: TextInputType.datetime,
+                            active: widget.client == null || edit ? true : false,
+                            needButton: (widget.client == null || edit) && birthday != DateTime(2100) ? true : false,
+                            onFieldClick: () async {
+                              _showGenderDialog(context: context, tempGender: gender);
+                            },
+                            onButtonClick: (){
+                              setState(() {
+                                gender = Gender();
+                                genderController.text = gender.getGenderString(needTranslate: true);
+                              });
+                            },
+                            iconForButton: FontAwesomeIcons.x,
+                            icon: gender.getGenderIcon(),
+                            activateButton: widget.client == null || edit ? true : false,
+
+                          ),
+
                         ],
                       ),
                     ),
-
-                    //if (widget.client == null || edit) const SizedBox(height: 30.0),
 
                     if (widget.client == null || edit) Container(
                       padding: const EdgeInsets.all(20.0),
@@ -381,10 +410,10 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
                                 if (result == 'ok'){
 
                                   if (widget.client != null) {
-                                    DbInfoManager.clientsList.removeWhere((element) => element.id == tempClient.id);
+                                    DbInfoManager.replaceChangedClientItem(tempClient);
+                                  } else {
+                                    DbInfoManager.clientsList.add(tempClient);
                                   }
-
-                                  DbInfoManager.clientsList.add(tempClient);
 
                                   showSnackBar('Клиент успешно опубликован!', Colors.green, 2);
 
@@ -449,6 +478,27 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
         dateController.text = DateMixin.getHumanDateFromDateTime(birthday);
 
       });
+    }
+  }
+
+  Future<void> _showGenderDialog({required BuildContext context, required Gender tempGender}) async {
+    final results = await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return GenderPickerWidget(gender: tempGender,);
+      },
+    );
+
+    if (results != null) {
+
+      setState(() {
+        loading = true;
+        gender = results;
+        genderController.text = gender.getGenderString(needTranslate: true);
+        loading = false;
+      });
+
     }
   }
 

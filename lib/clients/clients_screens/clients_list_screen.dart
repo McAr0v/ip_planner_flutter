@@ -203,7 +203,7 @@ class ClientListScreenState extends State<ClientListScreen> {
       String result = await client.deleteFromDb(DbInfoManager.currentUser.uid);
 
       if (result == 'ok') {
-        DbInfoManager.clientsList.removeWhere((element) => element.id == client.id);
+        DbInfoManager.removeFromClientList(client.id);
         list.removeWhere((element) => element.id == client.id);
 
         showSnackBar('Удаление прошло успешно!', Colors.green, 2);

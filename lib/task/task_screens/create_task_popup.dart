@@ -14,6 +14,7 @@ import '../../dates/choose_date_popup.dart';
 import '../../design/app_colors.dart';
 import '../../design/snackBars/custom_snack_bar.dart';
 import '../task_status.dart';
+import '../task_widgets/change_status_dialog.dart';
 
 
 class TaskCreatePopup extends StatefulWidget {
@@ -43,6 +44,7 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
   late TextEditingController startDateController;
   late TextEditingController endDateController;
   late TextEditingController clientController;
+  late TextEditingController statusController;
 
   late DateTime startDate;
   late DateTime endDate;
@@ -84,6 +86,7 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
     startDateController = TextEditingController();
     endDateController = TextEditingController();
     clientController = TextEditingController();
+    statusController = TextEditingController();
 
     startDate = DateTime(2100);
     endDate = DateTime(2100);
@@ -102,6 +105,7 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
       instagramController.text = widget.task!.instagram;
       commentController.text = widget.task!.comment;
       placeController.text = widget.task!.place;
+      statusController.text = widget.task!.status.getTaskStatusString(needTranslate: true);
 
       if (widget.task!.startDate != DateTime(2100)){
         startDate = widget.task!.startDate;
@@ -228,6 +232,29 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
                                       });
                                     },
                                     iconForButton: FontAwesomeIcons.x,
+                                  ),
+
+                                  const SizedBox(height: 20,),
+
+                                  InputField(
+                                    controller: statusController,
+                                    label: 'Статус задачи',
+                                    textInputType: TextInputType.datetime,
+                                    active: widget.task == null || edit ? true : false,
+                                    needButton: (widget.task == null || edit) && endDate != DateTime(2100) ? true : false,
+                                    onFieldClick: () {
+                                      _showStatusDialog(context: context);
+                                    },
+                                    onButtonClick: (){
+                                      setState(() {
+                                        status = TaskStatus();
+                                        endDateController.text = status.getTaskStatusString(needTranslate: true);
+                                      });
+                                    },
+                                    iconForButton: FontAwesomeIcons.x,
+                                    icon: FontAwesomeIcons.calendarDay,
+                                    activateButton: widget.task == null || edit ? true : false,
+
                                   ),
 
                                   const SizedBox(height: 20,),
@@ -468,6 +495,27 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
     );
   }
 
+  Future<void> _showStatusDialog({required BuildContext context}) async {
+    final results = await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return StatusPickerWidget(status: status,); // Вызываем кастомный виджет для pop-up
+      },
+    );
+
+    if (results != null) {
+
+      setState(() {
+        loading = true;
+        status = results;
+        statusController.text = status.getTaskStatusString(needTranslate: true);
+        loading = false;
+      });
+
+    }
+  }
+
   Future<void> _saveTask ({
     required TaskStatus status,
     required String label,
@@ -505,10 +553,12 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
       if (result == 'ok'){
 
         if (widget.task != null){
-          DbInfoManager.tasksList.removeWhere((element) => element.id == widget.task!.id);
+          DbInfoManager.replaceChangedTaskItem(tempTask);
+        } else {
+          DbInfoManager.tasksList.add(tempTask);
         }
 
-        DbInfoManager.tasksList.add(tempTask);
+
 
         showSnackBar('Задача успешно опубликована', Colors.green, 2);
 
