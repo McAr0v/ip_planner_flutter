@@ -6,6 +6,7 @@ import 'package:ip_planner_flutter/design/input_fields/input_field.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
+import '../../database/entities_managers/client_manager.dart';
 import '../../database/mixin_database.dart';
 import '../../design/app_colors.dart';
 import '../../design/snackBars/custom_snack_bar.dart';
@@ -56,7 +57,7 @@ class ClientSearchPopupState extends State<ClientSearchPopup> {
     showSearchBar = false;
 
     chosenClient = ClientCustom.empty();
-    list = DbInfoManager.clientsList;
+    list = ClientManager.clientsList;
     sortList(false);
 
     loading = false;
@@ -292,7 +293,7 @@ class ClientSearchPopupState extends State<ClientSearchPopup> {
         showSearchBar = false;
         searchController.text = '';
         chosenClient = results;
-        list = DbInfoManager.clientsList;
+        list = ClientManager.clientsList;
         sortList(false);
         chosenClientId = getIndex(chosenClient);
 
@@ -323,7 +324,7 @@ class ClientSearchPopupState extends State<ClientSearchPopup> {
     setState(() {
       chosenClient = ClientCustom.empty();
       chosenClientId = -1;
-      list = DbInfoManager.clientsList
+      list = ClientManager.clientsList
           .where((client) =>
       client.name.toLowerCase().contains(query.toLowerCase()) ||
           client.phone.contains(query)) // Проверяем и имя, и номер телефона

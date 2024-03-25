@@ -14,7 +14,7 @@ SnackBar customSnackBar({
   required Color backgroundColor,
 }) {
   return SnackBar(
-      content: TextCustom(text: message, textState: TextState.bodyMedium, color: AppColors.black,),
+      content: TextCustom(text: message, textState: TextState.bodyMedium, color: AppColors.black, softWrap: true, maxLines: 100,),
       duration: Duration(seconds: showTime),
       backgroundColor: backgroundColor
   );

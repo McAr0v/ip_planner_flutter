@@ -1,31 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ip_planner_flutter/clients/gender_class.dart';
-import 'package:ip_planner_flutter/database/database_info_manager.dart';
+import 'package:ip_planner_flutter/database/entities_managers/deal_manager.dart';
+import 'package:ip_planner_flutter/deal/deal_class.dart';
+import 'package:ip_planner_flutter/deal/deals_screens/deal_create_screen.dart';
 import 'package:ip_planner_flutter/design/app_colors.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
-import 'package:ip_planner_flutter/task/task_screens/create_task_popup.dart';
-import 'package:ip_planner_flutter/task/task_screens/task_filter_popup.dart';
-import 'package:ip_planner_flutter/task/task_screens/watch_task_popup.dart';
 import 'package:ip_planner_flutter/task/task_sort_enum.dart';
-import 'package:ip_planner_flutter/task/task_widgets/task_widget.dart';
-
-import '../../database/entities_managers/task_manager.dart';
-import '../../design/dialogs/dialog.dart';
 import '../../design/snackBars/custom_snack_bar.dart';
-import '../task_class.dart';
 
-class TaskScreen extends StatefulWidget {
-  const TaskScreen({super.key});
+class DealsScreen extends StatefulWidget {
+  const DealsScreen({super.key});
 
   @override
-  TaskScreenState createState() => TaskScreenState();
+  DealsScreenState createState() => DealsScreenState();
 
 }
 
-class TaskScreenState extends State<TaskScreen> {
+class DealsScreenState extends State<DealsScreen> {
 
   bool loading = true;
   bool deleting = false;
@@ -41,8 +34,8 @@ class TaskScreenState extends State<TaskScreen> {
 
 
 
-  List<TaskCustom> list = [];
-  List<TaskCustom> notSortedList = [];
+  List<DealCustom> list = [];
+  //List<DealCustom> notSortedList = [];
 
   @override
   void initState() {
@@ -51,91 +44,100 @@ class TaskScreenState extends State<TaskScreen> {
   }
 
   Future<void> initializeScreen() async {
-    
+
     setState(() {
       loading = true;
     });
-    
-    list = TaskManager.tasksList;
 
-    filterList();
+    list = DealManager.dealsList;
+
+    //filterList();
 
     filterCount = checkFilterAndGetNumber();
 
     setState(() {
       loading = false;
     });
-    
-    
+
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.blackLight,
-        title: const Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextCustom(text: 'Задачи', textState: TextState.headlineSmall, color: AppColors.white,),
-          ],
-        ),
-        actions: [
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        appBar: AppBar(
+          backgroundColor: AppColors.blackLight,
+          title: const Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (filterCount > 0) TextCustom(text: filterCount.toString(), textState: TextState.bodyMedium, color: AppColors.yellowLight,),
-              IconButton(
-                icon: Icon(FontAwesomeIcons.filter, size: 18, color: filterCount > 0 ? AppColors.yellowLight : AppColors.white,),
-                // Переход на страницу создания города
-                onPressed: () {
-                  _showFilterDialog(context: context);
-
-                },
-              ),
+              TextCustom(text: 'Сделки', textState: TextState.headlineSmall, color: AppColors.white,),
             ],
           ),
+          actions: [
 
-          IconButton(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (filterCount > 0) TextCustom(text: filterCount.toString(), textState: TextState.bodyMedium, color: AppColors.yellowLight,),
+                IconButton(
+                  icon: Icon(FontAwesomeIcons.filter, size: 18, color: filterCount > 0 ? AppColors.yellowLight : AppColors.white,),
+                  // Переход на страницу создания города
+                  onPressed: () {
+                    //_showFilterDialog(context: context);
 
-            icon: const Icon(Icons.add),
-
-            // Переход на страницу создания города
-            onPressed: () {
-              _showCreateTaskDialog(context: context);
-            },
-          ),
-
-
-
-        ],
-      ),
-      body: Stack(
-        children: [
-          if (loading) const LoadingScreen()
-          else if (deleting) const LoadingScreen(loadingText: "Подождите, идет удаление",)
-          else if (list.isNotEmpty) ListView.builder(
-              padding: const EdgeInsets.all(10.0),
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-                return TaskWidget(
-                    task: list[index],
-                  onDelete: (){
-                    deleteTask(list[index]);
                   },
-                  onTap: (){
-                      _showWatchTaskDialog(context: context, task: list[index]);
-                  }
+                ),
+              ],
+            ),
+
+            IconButton(
+
+              icon: const Icon(Icons.add),
+
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/create_deal',
+                      (route) => false,
                 );
-              }
-          )
-          else const Center(
-                child: TextCustom(text: 'Список задач пуст',),
+              },
+            ),
+
+
+
+          ],
+        ),
+        body: Stack(
+          children: [
+            if (loading) const LoadingScreen()
+            else if (deleting) const LoadingScreen(loadingText: "Подождите, идет удаление",)
+            else if (list.isNotEmpty) ListView.builder(
+                  padding: const EdgeInsets.all(10.0),
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      children: [
+                        Expanded(child: TextCustom(text: list[index].headline,)),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(builder: (context) => CreateDealScreen(deal: list[index])),
+                                    (route) => false,
+                              );
+                            },
+                            icon: Icon(Icons.edit)
+                        ),
+                      ],
+                    );
+                  }
               )
-        ],
-      )
+              else const Center(
+                  child: TextCustom(text: 'Список сделок пуст',),
+                )
+          ],
+        )
     );
   }
 
@@ -154,7 +156,7 @@ class TaskScreenState extends State<TaskScreen> {
 
   }
 
-  Future<void> _showWatchTaskDialog({required BuildContext context, required TaskCustom task}) async {
+  /*Future<void> _showWatchTaskDialog({required BuildContext context, required TaskCustom task}) async {
     final results = await showDialog(
       context: context,
       barrierDismissible: true,
@@ -166,23 +168,9 @@ class TaskScreenState extends State<TaskScreen> {
     if (results != null) {
       filterList();
     }
-  }
+  }*/
 
-  Future<void> _showCreateTaskDialog({required BuildContext context, TaskCustom? task}) async {
-    final results = await showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return TaskCreatePopup(task: task,); // Вызываем кастомный виджет для pop-up
-      },
-    );
-
-    if (results != null) {
-      filterList();
-    }
-  }
-
-  Future<void> _showFilterDialog({required BuildContext context, TaskCustom? task}) async {
+  /*Future<void> _showFilterDialog({required BuildContext context, TaskCustom? task}) async {
     final results = await showDialog(
       context: context,
       barrierDismissible: true,
@@ -219,9 +207,9 @@ class TaskScreenState extends State<TaskScreen> {
       filterList();
 
     }
-  }
+  }*/
 
-  void filterList(){
+  /*void filterList(){
     List<TaskCustom> tempList = TaskManager.filterList(pendingForFilter, cancelledForFilter, inProgressForFilter, completedForFilter);
 
     setState(() {
@@ -230,9 +218,9 @@ class TaskScreenState extends State<TaskScreen> {
 
     });
 
-  }
+  }*/
 
-  Future<void> deleteTask(TaskCustom task) async {
+  /*Future<void> deleteTask(TaskCustom task) async {
     bool? confirmed = await exitDialog(context, "Вы действительно хотите удалить задачу? \n \n Вы не сможете восстановить данные" , 'Да', 'Нет', 'Удаление задачи');
 
     if (confirmed != null && confirmed){
@@ -259,11 +247,11 @@ class TaskScreenState extends State<TaskScreen> {
 
     }
 
-  }
+  }*/
 
   void showSnackBar(String message, Color color, int showTime) {
     final snackBar = customSnackBar(message: message, backgroundColor: color, showTime: showTime);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
-  
+
 }

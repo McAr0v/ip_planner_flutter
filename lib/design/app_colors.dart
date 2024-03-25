@@ -20,5 +20,6 @@ class AppColors {
   static const Color cancelled = Color(0xFF940C0C); // Красный (#FF0000)
   static const Color completed = Color(0xFF298829); // Зеленый (#00FF00)
   static const Color inProgress = Color(0xFF313191); // Синий (#0000FF)
+  static const Color kaspi = Color(0xFFF14635);
 
 }

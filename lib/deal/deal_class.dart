@@ -8,7 +8,7 @@ class DealCustom with DateMixin implements EntityFromDb{
   String headline;
   String desc;
   String place;
-  String clientPhone;
+  String clientId;
   DateTime date;
   int price;
   DateTime createDate;
@@ -18,7 +18,7 @@ class DealCustom with DateMixin implements EntityFromDb{
     required this.headline,
     this.desc = '',
     this.place = '',
-    this.clientPhone = '',
+    this.clientId = '',
     required this.date,
     required this.price,
     required this.createDate
@@ -33,7 +33,7 @@ class DealCustom with DateMixin implements EntityFromDb{
         createDate: DateTime(2100),
         desc: '',
         place: '',
-        clientPhone: ''
+        clientId: ''
     );
   }
 
@@ -46,7 +46,7 @@ class DealCustom with DateMixin implements EntityFromDb{
         createDate: DateTime.parse(snapshot.child('createDate').value.toString()),
         desc: snapshot.child('desc').value.toString(),
         place: snapshot.child('place').value.toString(),
-        clientPhone: snapshot.child('clientPhone').value.toString()
+        clientId: snapshot.child('clientId').value.toString()
     );
 
   }
@@ -62,7 +62,7 @@ class DealCustom with DateMixin implements EntityFromDb{
       'createDate': createDate.toString(),
       'desc': desc,
       'place': place,
-      'clientPhone': clientPhone,
+      'clientId': clientId,
     };
   }
 
@@ -78,9 +78,12 @@ class DealCustom with DateMixin implements EntityFromDb{
   }
 
   @override
-  Future<String> deleteFromDb(String userId) {
-    // TODO: implement deleteFromDb
-    throw UnimplementedError();
+  Future<String> deleteFromDb(String userId) async {
+    String entityPath = '$userId/deals/$id';
+
+    String entityDeleteResult = await MixinDatabase.deleteFromDb(entityPath);
+
+    return entityDeleteResult;
   }
 
 

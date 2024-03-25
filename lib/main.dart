@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:ip_planner_flutter/auth/auth_manager.dart';
 import 'package:ip_planner_flutter/clients/clients_screens/clients_list_screen.dart';
 import 'package:ip_planner_flutter/database/database_info_manager.dart';
+import 'package:ip_planner_flutter/deal/deals_screens/deal_create_screen.dart';
 import 'package:ip_planner_flutter/design/dark_theme.dart';
 import 'package:ip_planner_flutter/navigation/custom_navigation.dart';
 import 'package:ip_planner_flutter/auth/auth_screens/login_screen.dart';
+import 'package:ip_planner_flutter/pay/payments_screens/payments_list_screen.dart';
 import 'package:ip_planner_flutter/screens/privacy_screen.dart';
 import 'package:ip_planner_flutter/auth/auth_screens/registration_screen.dart';
 import 'firebase_options.dart';
@@ -73,6 +75,8 @@ class MyApp extends StatelessWidget {
         '/logIn': (context) => const LoginScreen(),
         '/privacy_policy': (context) => const PrivacyPolicyPage(),
         '/clients': (context) => const ClientListScreen(),
+        '/payments': (context) => const PaymentsListScreen(),
+        '/create_deal': (context) => const CreateDealScreen(),
 
         // Другие маршруты вашего приложения
       },

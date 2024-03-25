@@ -56,9 +56,12 @@ class Pay with DateMixin implements EntityFromDb{
   }
 
   @override
-  Future<String> deleteFromDb(String userId) {
-    // TODO: implement deleteFromDb
-    throw UnimplementedError();
+  Future<String> deleteFromDb(String userId) async {
+    String entityPath = '$userId/payments/$id';
+
+    String entityDeleteResult = await MixinDatabase.deleteFromDb(entityPath);
+
+    return entityDeleteResult;
   }
 
 }

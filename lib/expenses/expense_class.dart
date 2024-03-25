@@ -13,6 +13,7 @@ class Expense with DateMixin implements EntityFromDb{
   ExpenseType expenseType;
   String idEntity;
   DateTime expenseDate;
+  String comment;
 
   Expense({
     required this.id,
@@ -20,7 +21,8 @@ class Expense with DateMixin implements EntityFromDb{
     required this.payType,
     required this.idEntity,
     required this.expenseType,
-    required this.expenseDate
+    required this.expenseDate,
+    required this.comment
   });
 
   factory Expense.empty(){
@@ -31,6 +33,7 @@ class Expense with DateMixin implements EntityFromDb{
         idEntity: "",
         expenseDate: DateTime(2100),
         expenseType: ExpenseType(),
+      comment: ''
     );
   }
 
@@ -43,6 +46,7 @@ class Expense with DateMixin implements EntityFromDb{
       'idEntity': idEntity,
       'expenseDate': DateMixin.generateDateString(expenseDate),
       'expenseType': expenseType.getExpenseTypeString(),
+      'comment': comment
     };
   }
 
@@ -60,7 +64,8 @@ class Expense with DateMixin implements EntityFromDb{
         payType: payType,
         idEntity: snapshot.child('idEntity').value.toString(),
         expenseType: expenseType,
-        expenseDate: DateMixin.getDateFromString(snapshot.child('expenseDate').value.toString())
+        expenseDate: DateMixin.getDateFromString(snapshot.child('expenseDate').value.toString()),
+      comment: snapshot.child('comment').value.toString(),
     );
 
   }
@@ -77,9 +82,12 @@ class Expense with DateMixin implements EntityFromDb{
   }
 
   @override
-  Future<String> deleteFromDb(String userId) {
-    // TODO: implement deleteFromDb
-    throw UnimplementedError();
+  Future<String> deleteFromDb(String userId) async {
+    String entityPath = '$userId/expenses/$id';
+
+    String entityDeleteResult = await MixinDatabase.deleteFromDb(entityPath);
+
+    return entityDeleteResult;
   }
 
 }

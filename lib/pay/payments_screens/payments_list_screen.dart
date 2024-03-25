@@ -4,24 +4,25 @@ import 'package:ip_planner_flutter/clients/client_class.dart';
 import 'package:ip_planner_flutter/clients/client_widgets/clients_widget.dart';
 import 'package:ip_planner_flutter/clients/clients_screens/client_create_popup.dart';
 import 'package:ip_planner_flutter/database/database_info_manager.dart';
+import 'package:ip_planner_flutter/database/entities_managers/payments_manager.dart';
 import 'package:ip_planner_flutter/design/app_colors.dart';
 import 'package:ip_planner_flutter/design/input_fields/input_field.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
-import '../../database/entities_managers/client_manager.dart';
+import 'package:ip_planner_flutter/pay/pay_class.dart';
 import '../../design/dialogs/dialog.dart';
 import '../../design/snackBars/custom_snack_bar.dart';
 
-class ClientListScreen extends StatefulWidget {
-  const ClientListScreen({super.key});
+class PaymentsListScreen extends StatefulWidget {
+  const PaymentsListScreen({super.key});
 
   @override
-  ClientListScreenState createState() => ClientListScreenState();
+  PaymentsListScreenState createState() => PaymentsListScreenState();
 
 }
 
-class ClientListScreenState extends State<ClientListScreen> {
+class PaymentsListScreenState extends State<PaymentsListScreen> {
 
   bool loading = true;
   bool deleting = false;
@@ -30,7 +31,7 @@ class ClientListScreenState extends State<ClientListScreen> {
 
   TextEditingController searchController = TextEditingController();
 
-  List<ClientCustom> list = [];
+  List<Pay> list = [];
 
   @override
   void initState() {
@@ -44,9 +45,9 @@ class ClientListScreenState extends State<ClientListScreen> {
       loading = true;
     });
 
-    list = ClientManager.clientsList;
+    list = PaymentsManager.paymentsList;
 
-    sortList(sort);
+    //sortList(sort);
 
     setState(() {
       loading = false;
@@ -64,7 +65,7 @@ class ClientListScreenState extends State<ClientListScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextCustom(text: 'Клиенты', textState: TextState.headlineSmall, color: AppColors.white,),
+              TextCustom(text: 'Оплаты от клиентов', textState: TextState.headlineSmall, color: AppColors.white,),
             ],
           ),
           actions: [
@@ -81,7 +82,7 @@ class ClientListScreenState extends State<ClientListScreen> {
               onPressed: () {
                 setState(() {
                   sort = !sort;
-                  sortList(sort);
+                  //sortList(sort);
                 });
               },
             ),
@@ -90,17 +91,17 @@ class ClientListScreenState extends State<ClientListScreen> {
               icon: Icon(Icons.search, color: showSearchBar ? AppColors.yellowLight : AppColors.white,),
 
               onPressed: () {
-                  setState(() {
+                setState(() {
 
-                    showSearchBar = !showSearchBar;
+                  showSearchBar = !showSearchBar;
 
-                    if (showSearchBar == false) {
-                      searchController.text = '';
-                      updateClientsListInSearch(searchController.text);
+                  if (showSearchBar == false) {
+                    searchController.text = '';
+                    //updateClientsListInSearch(searchController.text);
 
-                    }
+                  }
 
-                  });
+                });
               },
             ),
 
@@ -110,7 +111,7 @@ class ClientListScreenState extends State<ClientListScreen> {
 
               // Переход на страницу создания города
               onPressed: () {
-                _showCreateClientDialog(context: context);
+                //_showCreateClientDialog(context: context);
               },
             ),
 
@@ -119,7 +120,7 @@ class ClientListScreenState extends State<ClientListScreen> {
         body: Column(
           children: [
 
-            if (showSearchBar) Container(
+            /*if (showSearchBar) Container(
               color: AppColors.blackLight,
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               child: InputField(
@@ -141,7 +142,7 @@ class ClientListScreenState extends State<ClientListScreen> {
                 icon: Icons.search,
                 iconForButton: FontAwesomeIcons.x,
               ),
-            ),
+            ),*/
 
             //TextCustom(text: list.length.toString()),
 
@@ -152,47 +153,39 @@ class ClientListScreenState extends State<ClientListScreen> {
                     padding: const EdgeInsets.all(10.0),
                     itemCount: list.length,
                     itemBuilder: (context, index) {
-                      return ClientWidget(
-                        client: list[index],
-                        onDelete: (){
-                          deleteClient(list[index]);
-                        },
-                        onEdit: (){
-                          _showCreateClientDialog(context: context, client: list[index]);
-                        },
-                      );
+                      return TextCustom(text: list[index].sum.toString());
                     }
                 ),
               )
               else Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
 
-                      const TextCustom(text: 'Пусто( Создать клиента?',),
-                      const SizedBox(height: 20,),
-                      IconButton(
-                        icon: const Icon(Icons.add, color: AppColors.black,),
-                        onPressed: () {
-                          _showCreateClientDialog(context: context);
-                        },
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                                  (Set<MaterialState> states) {
-                                return Colors.green;
-                              },
-                            )
+                        const TextCustom(text: 'Пусто( Создать клиента?',),
+                        const SizedBox(height: 20,),
+                        IconButton(
+                          icon: const Icon(Icons.add, color: AppColors.black,),
+                          onPressed: () {
+                            //_showCreateClientDialog(context: context);
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                    (Set<MaterialState> states) {
+                                  return Colors.green;
+                                },
+                              )
+                          ),
                         ),
-                      ),
-                    ],
-                  )
+                      ],
+                    )
                 )
           ],
         )
     );
   }
 
-  Future<void> deleteClient(ClientCustom client) async {
+  /*Future<void> deleteClient(ClientCustom client) async {
     bool? confirmed = await exitDialog(context, "Вы действительно хотите удалить клиента? \n \n Вы не сможете восстановить данные" , 'Да', 'Нет', 'Удаление клиента');
 
     if (confirmed != null && confirmed){
@@ -204,7 +197,7 @@ class ClientListScreenState extends State<ClientListScreen> {
       String result = await client.deleteFromDb(DbInfoManager.currentUser.uid);
 
       if (result == 'ok') {
-        ClientManager.removeFromClientList(client.id);
+        DbInfoManager.removeFromClientList(client.id);
         list.removeWhere((element) => element.id == client.id);
 
         showSnackBar('Удаление прошло успешно!', Colors.green, 2);
@@ -219,11 +212,11 @@ class ClientListScreenState extends State<ClientListScreen> {
 
     }
 
-  }
+  }*/
 
   // ---- Функция отображения диалога фильтра ----
 
-  Future<void> _showCreateClientDialog({required BuildContext context, ClientCustom? client}) async {
+  /*Future<void> _showCreateClientDialog({required BuildContext context, ClientCustom? client}) async {
     final results = await showDialog(
       context: context,
       barrierDismissible: true,
@@ -236,7 +229,7 @@ class ClientListScreenState extends State<ClientListScreen> {
 
       setState(() {
         loading = true;
-        list = ClientManager.clientsList;
+        list = DbInfoManager.clientsList;
         sortList(sort);
         loading = false;
       });
@@ -246,21 +239,21 @@ class ClientListScreenState extends State<ClientListScreen> {
   void showSnackBar(String message, Color color, int showTime) {
     final snackBar = customSnackBar(message: message, backgroundColor: color, showTime: showTime);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  }*/
 
-  void updateClientsListInSearch(String query) {
+  /*void updateClientsListInSearch(String query) {
     setState(() {
-      list = ClientManager.clientsList
+      list = DbInfoManager.clientsList
           .where((client) =>
-            client.name.toLowerCase().contains(query.toLowerCase()) ||
-            client.phone.contains(query)) // Проверяем и имя, и номер телефона
+      client.name.toLowerCase().contains(query.toLowerCase()) ||
+          client.phone.contains(query)) // Проверяем и имя, и номер телефона
           .toList();
     });
-  }
+  }*/
 
-  void sortList(bool sort){
+  /*void sortList(bool sort){
     if (!sort) list.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     if (sort) list.sort((a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
-  }
+  }*/
 
 }

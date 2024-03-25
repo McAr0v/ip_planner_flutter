@@ -7,6 +7,7 @@ import 'package:ip_planner_flutter/design/input_fields/input_field.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
+import '../../database/entities_managers/client_manager.dart';
 import '../../database/mixin_database.dart';
 import '../../design/app_colors.dart';
 import '../../design/snackBars/custom_snack_bar.dart';
@@ -410,9 +411,9 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
                                 if (result == 'ok'){
 
                                   if (widget.client != null) {
-                                    DbInfoManager.replaceChangedClientItem(tempClient);
+                                    ClientManager.replaceChangedClientItem(tempClient);
                                   } else {
-                                    DbInfoManager.clientsList.add(tempClient);
+                                    ClientManager.clientsList.add(tempClient);
                                   }
 
                                   showSnackBar('Клиент успешно опубликован!', Colors.green, 2);

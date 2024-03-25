@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:ip_planner_flutter/expenses/expense_type_enum.dart';
+import '../design/text_widgets/text_custom.dart';
 
 class ExpenseType {
   ExpenseTypeEnum expenseType;
@@ -99,4 +101,78 @@ class ExpenseType {
         return needTranslate ? "Не выбрано" : "notChosen";
     }
   }
+
+  List<DropdownMenuItem<ExpenseTypeEnum>> getExpenseSortingOptionsList(){
+    return [
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.notChosen,
+        child: TextCustom(text: 'Не выбрано'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.equipmentPurchase,
+        child: TextCustom(text: 'Покупка оборудования'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.supplies,
+        child: TextCustom(text: 'Материалы'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.advertisingAndMarketing,
+        child: TextCustom(text: 'Реклама и маркетинг'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.rentExpense,
+        child: TextCustom(text: 'Арендная плата'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.utilities,
+        child: TextCustom(text: 'Коммунальные услуги'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.insurance,
+        child: TextCustom(text: 'Страхование'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.professionalDevelopment,
+        child: TextCustom(text: 'Профессиональное развитие'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.transportation,
+        child: TextCustom(text: 'Транспортные расходы'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.websiteHostingAndMaintenance,
+        child: TextCustom(text: 'Хостинг и поддержка веб-сайта'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.softwareSubscriptions,
+        child: TextCustom(text: 'Подписки на программное обеспечение'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.taxes,
+        child: TextCustom(text: 'Налоги'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.professionalMemberships,
+        child: TextCustom(text: 'Членские взносы'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.clientEntertainment,
+        child: TextCustom(text: 'Развлечение клиентов'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.officeSupplies,
+        child: TextCustom(text: 'Офисные принадлежности'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.legalAndAccountingServices,
+        child: TextCustom(text: 'Юридические и бухгалтерские услуги'),
+      ),
+      const DropdownMenuItem(
+        value: ExpenseTypeEnum.other,
+        child: TextCustom(text: 'Прочее'),
+      ),
+    ];
+  }
+
 }

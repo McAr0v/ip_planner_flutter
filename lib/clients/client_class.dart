@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:ip_planner_flutter/abstract_classes/entity_from_db.dart';
-import 'package:ip_planner_flutter/database/database_info_manager.dart';
 import 'package:ip_planner_flutter/database/mixin_database.dart';
+import '../database/entities_managers/client_manager.dart';
 import '../dates/date_mixin.dart';
 import 'gender_class.dart';
 
@@ -96,7 +96,7 @@ class ClientCustom with MixinDatabase implements EntityFromDb{
   }
 
   ClientCustom getClientFromList(String clientId) {
-    List<ClientCustom> list = DbInfoManager.clientsList;
+    List<ClientCustom> list = ClientManager.clientsList;
 
     try {
       return list.firstWhere((client) => client.id == clientId);

@@ -71,6 +71,20 @@ class ProfileScreenState extends State<ProfileScreen> {
                       }
                   ),
 
+                  const SizedBox(height: 50,),
+
+                  CustomButton(
+                      buttonText: 'Платежи',
+                      onTapMethod: (){
+                        Navigator.pushNamed(
+                            context,
+                            '/payments'
+                        );
+
+                      }
+                  ),
+
+
                 ],
               ),
             )

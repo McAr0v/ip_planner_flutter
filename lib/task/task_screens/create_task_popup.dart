@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ip_planner_flutter/clients/client_class.dart';
 import 'package:ip_planner_flutter/clients/clients_screens/client_search_popup.dart';
 import 'package:ip_planner_flutter/database/database_info_manager.dart';
+import 'package:ip_planner_flutter/database/entities_managers/task_manager.dart';
 import 'package:ip_planner_flutter/dates/date_mixin.dart';
 import 'package:ip_planner_flutter/design/input_fields/input_field.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
@@ -553,9 +554,9 @@ class TaskCreatePopupState extends State<TaskCreatePopup> {
       if (result == 'ok'){
 
         if (widget.task != null){
-          DbInfoManager.replaceChangedTaskItem(tempTask);
+          TaskManager.replaceChangedTaskItem(tempTask);
         } else {
-          DbInfoManager.tasksList.add(tempTask);
+          TaskManager.tasksList.add(tempTask);
         }
 
 

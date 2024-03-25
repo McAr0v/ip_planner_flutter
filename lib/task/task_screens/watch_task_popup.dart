@@ -10,6 +10,7 @@ import 'package:ip_planner_flutter/design/text_widgets/text_state.dart';
 import 'package:ip_planner_flutter/task/task_class.dart';
 import 'package:ip_planner_flutter/task/task_widgets/change_status_dialog.dart';
 import '../../database/database_info_manager.dart';
+import '../../database/entities_managers/task_manager.dart';
 import '../../design/app_colors.dart';
 import '../../design/snackBars/custom_snack_bar.dart';
 import '../task_status.dart';
@@ -384,7 +385,7 @@ class WatchTaskPopupState extends State<WatchTaskPopup> {
 
     if (result == 'ok'){
 
-      DbInfoManager.replaceChangedTaskItem(tempTask);
+      TaskManager.replaceChangedTaskItem(tempTask);
 
       showSnackBar('Задача успешно сохранена', Colors.green, 2);
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ip_planner_flutter/deal/deals_screens/deal_list_screen.dart';
 import 'package:ip_planner_flutter/navigation/bottom_bar_design.dart';
 import 'package:ip_planner_flutter/screens/profile_screen.dart';
 import 'package:ip_planner_flutter/screens/stat_screen.dart';
@@ -41,7 +42,7 @@ class CustomNavContainerState extends State<CustomNavContainer>
       body: TabBarView(
         controller: _tabController,
         children: const [
-          OrderScreen(),
+          DealsScreen(),
           TaskScreen(),
           StatScreen(),
           ProfileScreen(),
