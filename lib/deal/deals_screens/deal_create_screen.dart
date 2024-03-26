@@ -14,6 +14,9 @@ import 'package:ip_planner_flutter/design/buttons/custom_button.dart';
 import 'package:ip_planner_flutter/expenses/expense_class.dart';
 import 'package:ip_planner_flutter/expenses/expenses_screens/add_expense_popup.dart';
 import 'package:ip_planner_flutter/expenses/expenses_widgets/expense_widget.dart';
+import 'package:ip_planner_flutter/image_picker/image_uploader.dart';
+import 'package:ip_planner_flutter/note/notes_screens/add_note_popup.dart';
+import 'package:ip_planner_flutter/note/notes_widgets/note_widget.dart';
 import 'package:ip_planner_flutter/pay/pay_widgets/pay_widget.dart';
 import 'package:ip_planner_flutter/pay/payments_screens/add_pay_dialog.dart';
 import '../../clients/clients_screens/client_search_popup.dart';
@@ -26,6 +29,7 @@ import '../../design/loading/loading_screen.dart';
 import '../../design/snackBars/custom_snack_bar.dart';
 import '../../design/text_widgets/text_custom.dart';
 import '../../design/text_widgets/text_state.dart';
+import '../../image_picker/image_picker_service.dart';
 import '../../note/note_class.dart';
 import '../../pay/pay_class.dart';
 
@@ -43,8 +47,14 @@ class CreateDealScreen extends StatefulWidget {
 
 class CreateDealScreenState extends State<CreateDealScreen> {
 
+  final ImagePickerService imagePickerService = ImagePickerService();
+
   bool loading = true;
   bool saving = false;
+  
+  bool showPays = false;
+  bool showExpenses = false;
+  bool showNotes = false;
 
   late String id;
 
@@ -95,6 +105,10 @@ class CreateDealScreenState extends State<CreateDealScreen> {
       expensesList = ExpensesManager.getExpensesListForDeal(widget.deal!.id);
       paymentsList = PaymentsManager.getPaymentsListForDeal(widget.deal!.id);
 
+      notesList.sort((a,b) => a.createDate.compareTo(b.createDate));
+      expensesList.sort((a,b) => a.expenseDate.compareTo(b.expenseDate));
+      paymentsList.sort((a,b) => a.payDate.compareTo(b.payDate));
+
     } else {
       id = MixinDatabase.generateKey()!;
       createDate = DateTime.now();
@@ -127,7 +141,6 @@ class CreateDealScreenState extends State<CreateDealScreen> {
             size: 18,
           ),
 
-          // Переход на страницу создания города
           onPressed: () {
             returnToDeals();
           },
@@ -307,44 +320,71 @@ class CreateDealScreenState extends State<CreateDealScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const TextCustom(text: 'Список оплат клиента', textState: TextState.bodyBig, weight: FontWeight.bold,),
-                              const SizedBox(height: 5,),
-                              const TextCustom(text: 'Добавьте оплату от клиента', textState: TextState.labelMedium,),
-                              SizedBox(height: paymentsList.isNotEmpty ? 10 : 20,),
-                              if (paymentsList.isNotEmpty) for (Pay pay in paymentsList) PayWidget(
-                                  pay: pay,
-                                  onTap: () async {
-                                    Pay? tempPay = await _addPayDialog(context, pay);
-
-                                    if (tempPay != null) {
-                                      setState(() {
-                                        paymentsList.removeWhere((element) => element.id == tempPay.id);
-                                        paymentsList.add(tempPay);
-                                        paymentsList.sort((a,b) => a.payDate.compareTo(b.payDate));
-                                      });
-                                    }
-                                  },
-                                  onDelete: () async {
-                                    await deletePay(pay);
-                                  }
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          TextCustom(text: 'Список оплат клиента (${paymentsList.length})', textState: TextState.bodyBig, weight: FontWeight.bold,),
+                                          const SizedBox(height: 5,),
+                                          const TextCustom(text: 'Добавьте оплату от клиента', textState: TextState.labelMedium,),
+                                        ],
+                                      )
+                                  ),
+                                  IconButton(
+                                      onPressed: (){
+                                        setState(() {
+                                          showPays = !showPays;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        showPays ? FontAwesomeIcons.chevronDown : FontAwesomeIcons.chevronRight,
+                                        size: 18,
+                                      )
+                                  )
+                                ],
                               ),
 
-                              if (paymentsList.isEmpty) const TextCustom(text: 'Оплата от клиента еще не поступила('),
+                              if (showPays) Column(
+                                children: [
+                                  SizedBox(height: paymentsList.isNotEmpty ? 10 : 20,),
+                                  if (paymentsList.isNotEmpty) for (Pay pay in paymentsList) PayWidget(
+                                      pay: pay,
+                                      onTap: () async {
+                                        Pay? tempPay = await _addPayDialog(context, pay);
 
-                              const SizedBox(height: 20,),
+                                        if (tempPay != null) {
+                                          setState(() {
+                                            paymentsList.removeWhere((element) => element.id == tempPay.id);
+                                            paymentsList.add(tempPay);
+                                            paymentsList.sort((a,b) => a.payDate.compareTo(b.payDate));
+                                          });
+                                        }
+                                      },
+                                      onDelete: () async {
+                                        await deletePay(pay);
+                                      }
+                                  ),
 
-                              CustomButton(
-                                  buttonText: 'Добавить оплату',
-                                  onTapMethod: () async {
-                                    Pay? tempPay = await _addPayDialog(context, null);
+                                  if (paymentsList.isEmpty) const TextCustom(text: 'Оплата от клиента еще не поступила('),
 
-                                    if (tempPay != null) {
-                                      setState(() {
-                                        paymentsList.add(tempPay);
-                                        paymentsList.sort((a,b) => a.payDate.compareTo(b.payDate));
-                                      });
-                                    }
-                                  }
+                                  const SizedBox(height: 20,),
+
+                                  CustomButton(
+                                      buttonText: 'Добавить оплату',
+                                      onTapMethod: () async {
+                                        Pay? tempPay = await _addPayDialog(context, null);
+
+                                        if (tempPay != null) {
+                                          setState(() {
+                                            paymentsList.add(tempPay);
+                                            paymentsList.sort((a,b) => a.payDate.compareTo(b.payDate));
+                                          });
+                                        }
+                                      }
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -362,50 +402,159 @@ class CreateDealScreenState extends State<CreateDealScreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const TextCustom(text: 'Затраты на совершение сделки', textState: TextState.bodyBig, weight: FontWeight.bold,),
-                              const SizedBox(height: 5,),
-                              const TextCustom(text: 'Добавьте расходы, которые вы понесете при выполнении работы', textState: TextState.labelMedium, maxLines: 10,),
-                              SizedBox(height: expensesList.isNotEmpty ? 10 : 20,),
-                              if (expensesList.isNotEmpty) for (Expense expense in expensesList) ExpenseWidget(
-                                  expense: expense,
-                                  onTap: () async {
-                                    Expense? tempExpense = await _addExpenseDialog(context, expense);
-
-                                    if (tempExpense != null) {
-                                      setState(() {
-                                        expensesList.removeWhere((element) => element.id == tempExpense.id);
-                                        expensesList.add(tempExpense);
-                                        expensesList.sort((a,b) => a.expenseDate.compareTo(b.expenseDate));
-                                      });
-                                    }
-                                  },
-                                  onDelete: () async {
-                                    await deleteExpense(expense);
-                                  }
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          TextCustom(text: 'Затраты на совершение сделки (${expensesList.length})', textState: TextState.bodyBig, weight: FontWeight.bold, maxLines: 20,),
+                                          const SizedBox(height: 5,),
+                                          const TextCustom(text: 'Добавьте расходы, которые вы понесете при выполнении работы', textState: TextState.labelMedium, maxLines: 10,),
+                                        ],
+                                      )
+                                  ),
+                                  IconButton(
+                                      onPressed: (){
+                                        setState(() {
+                                          showExpenses = !showExpenses;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        showExpenses ? FontAwesomeIcons.chevronDown : FontAwesomeIcons.chevronRight,
+                                        size: 18,
+                                      )
+                                  )
+                                ],
                               ),
 
-                              if (expensesList.isEmpty) const TextCustom(text: 'Нет затрат'),
+                              if (showExpenses) Column(
+                                children: [
+                                  SizedBox(height: expensesList.isNotEmpty ? 10 : 20,),
+                                  if (expensesList.isNotEmpty) for (Expense expense in expensesList) ExpenseWidget(
+                                      expense: expense,
+                                      onTap: () async {
+                                        Expense? tempExpense = await _addExpenseDialog(context, expense);
 
-                              const SizedBox(height: 20,),
+                                        if (tempExpense != null) {
+                                          setState(() {
+                                            expensesList.removeWhere((element) => element.id == tempExpense.id);
+                                            expensesList.add(tempExpense);
+                                            expensesList.sort((a,b) => a.expenseDate.compareTo(b.expenseDate));
+                                          });
+                                        }
+                                      },
+                                      onDelete: () async {
+                                        await deleteExpense(expense);
+                                      }
+                                  ),
 
-                              CustomButton(
-                                  buttonText: 'Добавить затраты',
-                                  onTapMethod: () async {
-                                    Expense? tempExpense = await _addExpenseDialog(context, null);
+                                  if (expensesList.isEmpty) const TextCustom(text: 'Нет затрат'),
 
-                                    if (tempExpense != null) {
-                                      setState(() {
-                                        expensesList.add(tempExpense);
-                                        expensesList.sort((a,b) => a.expenseDate.compareTo(b.expenseDate));
-                                      });
-                                    }
-                                  }
-                              ),
+                                  const SizedBox(height: 20,),
+
+                                  CustomButton(
+                                      buttonText: 'Добавить затраты',
+                                      onTapMethod: () async {
+                                        Expense? tempExpense = await _addExpenseDialog(context, null);
+
+                                        if (tempExpense != null) {
+                                          setState(() {
+                                            expensesList.add(tempExpense);
+                                            expensesList.sort((a,b) => a.expenseDate.compareTo(b.expenseDate));
+                                          });
+                                        }
+                                      }
+                                  ),
+                                ],
+                              )
                             ],
                           ),
                         ),
 
-                        const SizedBox(height: 50,),
+                        const SizedBox(height: 20,),
+
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: AppColors.blackLight,
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          TextCustom(text: 'Заметки (${notesList.length})', textState: TextState.bodyBig, weight: FontWeight.bold,),
+                                          const SizedBox(height: 5,),
+                                          const TextCustom(text: 'Добавьте заметки, идеи, фотографии', textState: TextState.labelMedium, maxLines: 10,),
+                                        ],
+                                      )
+                                  ),
+                                  IconButton(
+                                      onPressed: (){
+                                        setState(() {
+                                          showNotes = !showNotes;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        showNotes ? FontAwesomeIcons.chevronDown : FontAwesomeIcons.chevronRight,
+                                        size: 18,
+                                      )
+                                  )
+                                ],
+                              ),
+
+                              if (showNotes) Column(
+                                children: [
+                                  SizedBox(height: notesList.isNotEmpty ? 10 : 20,),
+                                  if (notesList.isNotEmpty) for (Note note in notesList) NoteWidget(
+                                      note: note,
+                                      onTap: () async {
+                                        Note? tempNote = await _addNoteDialog(context, note);
+
+                                        if (tempNote != null) {
+                                          setState(() {
+                                            notesList.removeWhere((element) => element.id == tempNote.id);
+                                            notesList.add(tempNote);
+                                            notesList.sort((a,b) => a.createDate.compareTo(b.createDate));
+                                          });
+                                        }
+                                      },
+                                      onDelete: () async {
+                                        await deleteNote(note);
+                                      }
+                                  ),
+
+                                  if (notesList.isEmpty) const TextCustom(text: 'Нет заметок'),
+
+                                  const SizedBox(height: 20,),
+
+                                  CustomButton(
+                                      buttonText: 'Добавить заметку',
+                                      onTapMethod: () async {
+                                        Note? tempNote = await _addNoteDialog(context, null);
+
+                                        if (tempNote != null) {
+                                          setState(() {
+                                            notesList.add(tempNote);
+                                            notesList.sort((a,b) => a.createDate.compareTo(b.createDate));
+                                          });
+                                        }
+                                      }
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 20,),
 
                         CustomButton(
                             buttonText: 'Сохранить',
@@ -495,6 +644,41 @@ class CreateDealScreenState extends State<CreateDealScreen> {
     }
   }
 
+  Future<void> deleteNote(Note note) async {
+    bool? confirmed = await exitDialog(
+        context,
+        "Вы действительно хотите удалить заметку? \n \n Вы не сможете восстановить данные" ,
+        'Да',
+        'Нет',
+        'Удаление заметки'
+    );
+
+    if (confirmed != null && confirmed){
+
+      setState(() {
+        loading = true;
+      });
+
+      if (note.imageUrl.isNotEmpty) {
+        await ImageUploader.deleteImage(note.imageUrl);
+      }
+
+      String deleteNote = await note.deleteFromDb(DbInfoManager.currentUser.uid);
+      if (deleteNote == 'ok' || deleteNote == 'Данные не найдены'){
+        setState((){
+          notesList.removeWhere((element) => element.id == note.id);
+          NotesManager.notesList.removeWhere((element) => element.id == note.id);
+          notesList.sort((a,b) => a.headline.compareTo(b.headline));
+        });
+        showSnackBar('Заметка успешно удалена', Colors.green, 2);
+      }
+      setState(() {
+        loading = false;
+      });
+
+    }
+  }
+
   void returnToDeals(){
     Navigator.pushNamedAndRemoveUntil(
       context,
@@ -538,6 +722,15 @@ class CreateDealScreenState extends State<CreateDealScreen> {
         if (expenseResult == 'ok'){
           ExpensesManager.expensesList.removeWhere((element) => element.id == tempExpense.id);
           ExpensesManager.expensesList.add(tempExpense);
+
+        }
+      }
+
+      for(Note tempNote in notesList){
+        String noteResult = await tempNote.publishToDb(DbInfoManager.currentUser.uid);
+        if (noteResult == 'ok'){
+          NotesManager.notesList.removeWhere((element) => element.id == tempNote.id);
+          NotesManager.notesList.add(tempNote);
 
         }
       }
@@ -601,6 +794,22 @@ class CreateDealScreenState extends State<CreateDealScreen> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AddExpensePopup(expense: expense, idEntity: id,); // Вызываем кастомный виджет для pop-up
+      },
+    );
+
+    if (results != null) {
+      return results;
+    } else {
+      return null;
+    }
+  }
+
+  Future<Note?> _addNoteDialog(BuildContext context, Note? note) async {
+    final results = await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AddNotePopup(note: note, idEntity: id,); // Вызываем кастомный виджет для pop-up
       },
     );
 

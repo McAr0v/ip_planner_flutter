@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ip_planner_flutter/database/entities_managers/deal_manager.dart';
 import 'package:ip_planner_flutter/deal/deal_class.dart';
 import 'package:ip_planner_flutter/deal/deals_screens/deal_create_screen.dart';
+import 'package:ip_planner_flutter/deal/deals_screens/deal_view_screen.dart';
+import 'package:ip_planner_flutter/deal/deals_widgets/deal_widget.dart';
 import 'package:ip_planner_flutter/design/app_colors.dart';
 import 'package:ip_planner_flutter/design/loading/loading_screen.dart';
 import 'package:ip_planner_flutter/design/text_widgets/text_custom.dart';
@@ -50,6 +52,8 @@ class DealsScreenState extends State<DealsScreen> {
     });
 
     list = DealManager.dealsList;
+
+    list.sort((a, b) => a.date.compareTo(b.date));
 
     //filterList();
 
@@ -116,20 +120,28 @@ class DealsScreenState extends State<DealsScreen> {
                   padding: const EdgeInsets.all(10.0),
                   itemCount: list.length,
                   itemBuilder: (context, index) {
-                    return Row(
-                      children: [
-                        Expanded(child: TextCustom(text: list[index].headline,)),
-                        IconButton(
-                            onPressed: () {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (context) => CreateDealScreen(deal: list[index])),
-                                    (route) => false,
-                              );
-                            },
-                            icon: Icon(Icons.edit)
-                        ),
-                      ],
+                    return DealWidget(
+                        deal: list[index],
+                      onEdit: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => CreateDealScreen(deal: list[index])),
+                              (route) => false,
+                        );
+                      },
+                      onDelete: (){
+
+                      },
+                      onTap: () async {
+                        final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => DealViewScreen(deal: list[index]))
+                        );
+
+                        if (result != null) {
+
+                        }
+                      },
                     );
                   }
               )

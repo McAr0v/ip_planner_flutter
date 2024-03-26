@@ -117,6 +117,8 @@ class ClientListScreenState extends State<ClientListScreen> {
           ],
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
 
             if (showSearchBar) Container(
@@ -164,9 +166,10 @@ class ClientListScreenState extends State<ClientListScreen> {
                     }
                 ),
               )
-              else Expanded(
+              else Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
 
                       const TextCustom(text: 'Пусто( Создать клиента?',),

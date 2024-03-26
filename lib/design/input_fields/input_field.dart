@@ -7,6 +7,7 @@ class InputField extends StatelessWidget {
   final IconData? icon;
   final IconData? iconForButton;
   final int? maxLines;
+  final int? maxLength;
   final String label;
   final bool active;
   final bool needButton;
@@ -28,7 +29,8 @@ class InputField extends StatelessWidget {
     this.activateButton = false,
     this.onFieldClick,
     this.onButtonClick,
-    this.onChanged
+    this.onChanged,
+    this.maxLength
   });
 
   @override
@@ -55,6 +57,7 @@ class InputField extends StatelessWidget {
             onChanged: onChanged,
             onTap: onFieldClick,
             readOnly: onFieldClick != null ? true : false,
+            maxLength: maxLength,
 
           ),
         ),

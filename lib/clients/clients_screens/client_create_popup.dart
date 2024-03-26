@@ -196,7 +196,7 @@ class ClientCreatePopupState extends State<ClientCreatePopup> {
                     // ---- Содержимое фильтра -----
 
                     SingleChildScrollView (
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
