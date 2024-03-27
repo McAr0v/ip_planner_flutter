@@ -98,8 +98,13 @@ class DealViewScreenState extends State<DealViewScreen> {
                 const SizedBox(height: 10,),
                 TextCustom(text: '${DateMixin.getHumanDateFromDateTime(widget.deal.date)} в ${DateMixin.getHumanTimeFromDateTime(widget.deal.date)}', textState: TextState.labelMedium),
 
+                if (widget.deal.place.isNotEmpty) const SizedBox(height: 20,),
+                if (widget.deal.place.isNotEmpty) TextCustom(text: 'Место проведения: ${widget.deal.place}', maxLines: 100,),
+
                 if (widget.deal.desc.isNotEmpty) const SizedBox(height: 20,),
                 if (widget.deal.desc.isNotEmpty) TextCustom(text: widget.deal.desc, maxLines: 100,),
+
+
 
                 const SizedBox(height: 20,),
                 Container(
