@@ -114,7 +114,8 @@ class AddNotePopupState extends State<AddNotePopup> {
                                       const SizedBox(height: 10,),
 
                                       TextCustom(
-                                        text: deal.headline.isNotEmpty ? 'Заметка для сделки ${DealManager.getDeal(widget.idEntity).headline}' : 'Заполните данные о заметке',
+                                        //text: deal.headline.isNotEmpty ? 'Заметка для сделки ${DealManager.getDeal(widget.idEntity).headline}' : 'Заполните данные о заметке',
+                                        text: 'Заполните данные о заметке',
                                         textState: TextState.labelMedium,
                                       ),
 

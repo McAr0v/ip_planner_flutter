@@ -5,7 +5,7 @@ import '../database/mixin_database.dart';
 
 class DealCustom with DateMixin implements EntityFromDb{
   String id;
-  String headline;
+  //String headline;
   String desc;
   String place;
   String clientId;
@@ -15,7 +15,7 @@ class DealCustom with DateMixin implements EntityFromDb{
 
   DealCustom({
     required this.id,
-    required this.headline,
+    //required this.headline,
     this.desc = '',
     this.place = '',
     this.clientId = '',
@@ -27,7 +27,7 @@ class DealCustom with DateMixin implements EntityFromDb{
   factory DealCustom.empty(){
     return DealCustom(
         id: '',
-        headline: '',
+        //headline: '',
         date: DateTime(2100),
         price: 0,
         createDate: DateTime(2100),
@@ -40,7 +40,7 @@ class DealCustom with DateMixin implements EntityFromDb{
   factory DealCustom.fromSnapshot(DataSnapshot snapshot) {
     return DealCustom(
         id: snapshot.child('id').value.toString(),
-        headline: snapshot.child('headline').value.toString(),
+        //headline: snapshot.child('headline').value.toString(),
         date: DateTime.parse(snapshot.child('date').value.toString()),
         price: int.parse(snapshot.child('price').value.toString()),
         createDate: DateTime.parse(snapshot.child('createDate').value.toString()),
@@ -56,7 +56,7 @@ class DealCustom with DateMixin implements EntityFromDb{
 
     return <String, dynamic> {
       'id': id,
-      'headline': headline,
+      //'headline': headline,
       'date': date.toString(),
       'price': price,
       'createDate': createDate.toString(),

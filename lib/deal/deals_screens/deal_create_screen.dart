@@ -58,7 +58,7 @@ class CreateDealScreenState extends State<CreateDealScreen> {
 
   late String id;
 
-  late TextEditingController headlineController;
+  //late TextEditingController headlineController;
   late TextEditingController descController;
   late TextEditingController placeController;
   late TextEditingController priceController;
@@ -83,7 +83,7 @@ class CreateDealScreenState extends State<CreateDealScreen> {
       loading = true;
     });
 
-    headlineController = TextEditingController();
+    //headlineController = TextEditingController();
     descController = TextEditingController();
     placeController = TextEditingController();
     priceController = TextEditingController();
@@ -92,7 +92,7 @@ class CreateDealScreenState extends State<CreateDealScreen> {
 
     if (widget.deal != null) {
       id = widget.deal!.id;
-      headlineController.text = widget.deal!.headline;
+      //headlineController.text = widget.deal!.headline;
       descController.text = widget.deal!.desc;
       placeController.text = widget.deal!.place;
       priceController.text = widget.deal!.price.toString();
@@ -158,7 +158,7 @@ class CreateDealScreenState extends State<CreateDealScreen> {
                     child: Column(
                       children: [
 
-                        InputField(
+                        /*InputField(
                           controller: headlineController,
                           label: widget.deal == null ? 'Название сделки (Обязательно)' : 'Название сделки',
                           textInputType: TextInputType.text,
@@ -177,6 +177,36 @@ class CreateDealScreenState extends State<CreateDealScreen> {
                             });
                           },
                           iconForButton: FontAwesomeIcons.x,
+                        ),
+
+                        const SizedBox(height: 20,),*/
+
+                        InputField(
+                          controller: clientController,
+                          label: 'Клиент',
+                          textInputType: TextInputType.text,
+                          active: true,
+                          needButton: true,
+                          onFieldClick: () async {
+                            ClientCustom? tempClient = await _showChooseClientDialog(context: context);
+
+                            if (tempClient != null) {
+                              setState(() {
+                                client = tempClient;
+                                clientController.text = client.name;
+                              });
+                            }
+                          },
+                          iconForButton: FontAwesomeIcons.x,
+                          icon: Icons.person,
+                          activateButton: client.id.isNotEmpty ? true : false,
+                          onButtonClick: (){
+                            setState(() {
+                              client = ClientCustom.empty();
+                              clientController.text = '';
+                            });
+                          },
+
                         ),
 
                         const SizedBox(height: 20,),
@@ -280,35 +310,7 @@ class CreateDealScreenState extends State<CreateDealScreen> {
 
                         const SizedBox(height: 20,),
 
-                        InputField(
-                          controller: clientController,
-                          label: 'Клиент',
-                          textInputType: TextInputType.text,
-                          active: true,
-                          needButton: true,
-                          onFieldClick: () async {
-                            ClientCustom? tempClient = await _showChooseClientDialog(context: context);
 
-                            if (tempClient != null) {
-                              setState(() {
-                                client = tempClient;
-                                clientController.text = client.name;
-                              });
-                            }
-                          },
-                          iconForButton: FontAwesomeIcons.x,
-                          icon: Icons.person,
-                          activateButton: client.id.isNotEmpty ? true : false,
-                          onButtonClick: (){
-                            setState(() {
-                              client = ClientCustom.empty();
-                              clientController.text = '';
-                            });
-                          },
-
-                        ),
-
-                        const SizedBox(height: 20,),
 
                         Container(
                           padding: const EdgeInsets.all(20),
@@ -693,11 +695,11 @@ class CreateDealScreenState extends State<CreateDealScreen> {
       loading = true;
     });
 
-    if (headlineController.text.isNotEmpty && priceController.text.isNotEmpty){
+    if (priceController.text.isNotEmpty && client.id.isNotEmpty){
 
       DealCustom tempDeal = DealCustom(
           id: id,
-          headline: headlineController.text,
+          //headline: headlineController.text,
           date: date,
           price: int.parse(priceController.text),
           createDate: createDate,
@@ -754,10 +756,10 @@ class CreateDealScreenState extends State<CreateDealScreen> {
       setState(() {
         loading = false;
       });
-    } else if (headlineController.text.isEmpty) {
+    } else if (client.id.isEmpty) {
       setState(() {
         loading = false;
-        showSnackBar('Название сделки должно быть заполнено!', AppColors.attentionRed, 2);
+        showSnackBar('Клиент должен быть обязательно выбран', AppColors.attentionRed, 2);
       });
     } else if (priceController.text.isEmpty){
       setState(() {

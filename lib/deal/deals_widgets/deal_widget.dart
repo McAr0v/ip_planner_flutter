@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ip_planner_flutter/clients/client_class.dart';
+import 'package:ip_planner_flutter/database/entities_managers/client_manager.dart';
 import 'package:ip_planner_flutter/dates/date_mixin.dart';
 import 'package:ip_planner_flutter/deal/deal_class.dart';
 import 'package:ip_planner_flutter/pay/pay_widgets/pay_credit_widget.dart';
@@ -22,6 +24,9 @@ class DealWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    ClientCustom client = ClientManager.getClientFromList(deal.clientId);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -42,7 +47,8 @@ class DealWidget extends StatelessWidget {
                       children: [
                         TextCustom(text: '${DateMixin.getHumanDateFromDateTime(deal.date)} в ${DateMixin.getHumanTimeFromDateTime(deal.date)}', textState: TextState.labelMedium),
                         const SizedBox(height: 5,),
-                        TextCustom(text: deal.headline, textState: TextState.bodyBig, weight: FontWeight.bold),
+                        //TextCustom(text: deal.headline, textState: TextState.bodyBig, weight: FontWeight.bold),
+                        TextCustom(text: client.name, textState: TextState.bodyBig, weight: FontWeight.bold),
                       ],
                     )
                 ),

@@ -108,10 +108,10 @@ class AddExpensePopupState extends State<AddExpensePopup> {
 
                                       const SizedBox(height: 10,),
 
-                                      TextCustom(
+                                      /*TextCustom(
                                         text: deal.headline.isNotEmpty ? 'Расходы на сделку ${DealManager.getDeal(widget.idEntity).headline}' : 'Заполните данные о затратах',
                                         textState: TextState.labelMedium,
-                                      ),
+                                      ),*/
 
                                     ],
                                   )

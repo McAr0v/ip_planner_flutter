@@ -93,7 +93,8 @@ class AddPayPopupState extends State<AddPayPopup> {
 
                                       const SizedBox(height: 10,),
 
-                                      TextCustom(text: 'Оплата за сделку ${DealManager.getDeal(widget.idEntity).headline}', textState: TextState.labelMedium,),
+                                      //TextCustom(text: 'Оплата за сделку ${DealManager.getDeal(widget.idEntity).headline}', textState: TextState.labelMedium,),
+                                      TextCustom(text: 'Оплата за сделку', textState: TextState.labelMedium,),
 
                                     ],
                                   )
